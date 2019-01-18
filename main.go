@@ -60,7 +60,7 @@ func main() {
 	flag.Parse()
 
 	if len(flag.Args()) == 1 && flag.Args()[0] == "help" {
-		fmt.Println("\nDo \"romanesco help {Fractal Name}\" for further info on a particular fractal function.\n")
+		fmt.Println("\nDo \"romanesgo help {Fractal Name}\" for further info on a particular fractal function.\n")
 		fmt.Println("Fractals:")
 
 		fractalNames := sortMapKeys(fractals)
@@ -89,7 +89,7 @@ func main() {
 			fmt.Println("\nUnrecognised fractal function name.")
 		}
 	} else if *fractalFunc == "none" {
-		fmt.Println("\nDo \"romanesco help\" for more info.")
+		fmt.Println("\nDo \"romanesgo help\" for more info.")
 	} else {
 		fmt.Println("\n\tFractal (ff):\t\t", *fractalFunc,
 			"\n\tConstants (c):\t\t", constants.String(),
