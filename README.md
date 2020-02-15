@@ -3,10 +3,12 @@
 A simple fractal exploration program I wrote when I was 17/18.
 Named after the "cooler" version of broccoli.
 
+
+
 ## Usage
 
 ``` 
-...>romanesgo help
+$ ./romanesgo help
 
 Do "romanesco help {Fractal Name}" for further info on a particular fractal function.
 
@@ -41,6 +43,40 @@ Flags:
   -z float
         zoom factor (default 1)
 ```
+
+
+
+## Performance
+
+So, here's some usage on an i5-3320m (pretty old lil laptop processor):
+
+```
+$ ./romanesgo -ff=burningship -x=-1.748 -y=0.035 -z=20 -ss=4 -w=25000 -h=25000 -fn=bigship.png
+
+	Fractal (ff):		 burningship 
+	Constants (c):		  
+	Max Iterations (i):	 128 
+	Colouring function (cf): default 
+	Centre x Coord (x):	 -1.748 
+	Centre y Coord (y):	 0.035 
+	Zoom factor (z):	 20 
+	Image Width (w):	 25000 
+	Image Height (h):	 25000 
+	Supersampling (ss):	 4 
+	Routines (r):		 4 
+	Filename (png) (fn):	 bigship.png 
+
+Routine 2 Done.
+Routine 0 Done.
+Routine 3 Done.
+Routine 1 Done.
+
+Time taken: 14m9.110651581s
+```
+
+What is that, a 625 megapixel image, in 14 minutes? I guess that's alright for an old laptop. :man_shrugging:
+
+
 
 ## Example images
 
