@@ -76,6 +76,8 @@ Time taken: 14m9.110651581s
 
 What is that, a 625 megapixel image, in 14 minutes? I guess that's alright for an old laptop. :man_shrugging:
 
+Oh, and that's with supersampling set to 4, so it's making 16 samples per pixel, which basically makes that equivalent to a 10 gigapixel image.
+
 
 
 ## Example images
