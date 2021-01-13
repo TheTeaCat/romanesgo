@@ -1,4 +1,4 @@
-package main
+package lib
 
 import (
 	"fmt"
@@ -7,8 +7,8 @@ import (
 	"sync"
 )
 
-type fractGen struct {
-	fractImg     *image.NRGBA
+type gen struct {
+	Img          *image.NRGBA
 	xPos         float64
 	yPos         float64
 	zoom         float64
@@ -19,8 +19,8 @@ type fractGen struct {
 	iterationCap int
 }
 
-func getNewFractGen(width, height, routines, iterationCap int, xPos, yPos, zoom float64) fractGen {
-	newFractGen := fractGen{
+func NewGenerator(width, height, routines, iterationCap int, xPos, yPos, zoom float64) gen {
+	newGen := gen{
 		width:        width,
 		height:       height,
 		routines:     routines,
@@ -28,27 +28,27 @@ func getNewFractGen(width, height, routines, iterationCap int, xPos, yPos, zoom 
 		xPos:         xPos,
 		yPos:         yPos,
 		zoom:         zoom,
-		fractImg:     image.NewNRGBA(image.Rect(0, 0, width, height)),
+		Img:          image.NewNRGBA(image.Rect(0, 0, width, height)),
 	}
 
 	//Picks the smaller of the two dimensions (width and height) and uses that length in pixels as the length of 2 divided by the zoom factor as the scale for both axis.
-	if newFractGen.width < newFractGen.height {
-		newFractGen.scaler = float64(newFractGen.width)
+	if newGen.width < newGen.height {
+		newGen.scaler = float64(newGen.width)
 	} else {
-		newFractGen.scaler = float64(newFractGen.height)
+		newGen.scaler = float64(newGen.height)
 	}
 
-	return newFractGen
+	return newGen
 
 }
 
-func (f fractGen) pixToCoord(xPix, yPix float64) (xCoord, yCoord float64) {
+func (f gen) pixToCoord(xPix, yPix float64) (xCoord, yCoord float64) {
 	xCoord = ((xPix - (float64(f.width) / 2)) * ((2 / f.scaler) / f.zoom)) + f.xPos
 	yCoord = ((yPix - (float64(f.height) / 2)) * ((2 / f.scaler) / f.zoom)) + f.yPos
 	return xCoord, yCoord
 }
 
-func (f fractGen) generate(pointFunc func(float64, float64, int) (R, G, B, A float64), samples int) {
+func (f gen) Generate(pointFunc func(float64, float64, int) (R, G, B, A float64), samples int) {
 	var wg sync.WaitGroup
 	wg.Add(f.routines)
 
@@ -59,7 +59,7 @@ func (f fractGen) generate(pointFunc func(float64, float64, int) (R, G, B, A flo
 	wg.Wait()
 }
 
-func (f fractGen) genRoutine(wg *sync.WaitGroup, rno int, samples int, pointFunc func(float64, float64, int) (R, G, B, A float64)) {
+func (f gen) genRoutine(wg *sync.WaitGroup, rno int, samples int, pointFunc func(float64, float64, int) (R, G, B, A float64)) {
 
 	offsets := make([]float64, samples)
 
@@ -88,7 +88,7 @@ func (f fractGen) genRoutine(wg *sync.WaitGroup, rno int, samples int, pointFunc
 					A+(a/samplesSquared)
 			}
 		}
-		f.fractImg.Set(xPix, yPix, color.RGBA{uint8(R), uint8(G), uint8(B), uint8(A)})
+		f.Img.Set(xPix, yPix, color.RGBA{uint8(R), uint8(G), uint8(B), uint8(A)})
 	}
 	fmt.Println("Routine", rno, "Done.")
 

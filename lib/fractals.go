@@ -1,4 +1,4 @@
-package main
+package lib
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-var fractals = map[string]interface{}{
+var Fractals = map[string]interface{}{
 	"mandelbrot": map[string]interface{}{
 		"description": "Classic mandelbrot function.",
 		"constants":   0,
@@ -47,20 +47,20 @@ var fractals = map[string]interface{}{
 	},
 }
 
-func getFractalFunction(fractalName, colouringFuncName string, constants []float64) func(float64, float64, int) (R, G, B, A float64) {
-	fractalFuncUnasserted, valid := fractals[fractalName] //Asserted after validation because if the fractal function's wrong, we'd try to assert nil.
+func GetFractalFunction(fractalName, colouringFuncName string, constants []float64) func(float64, float64, int) (R, G, B, A float64) {
+	fractalFuncUnasserted, valid := Fractals[fractalName] //Asserted after validation because if the fractal function's wrong, we'd try to assert nil.
 	if valid != true {
 		fmt.Println("Invalid fractal function.")
 		os.Exit(1)
 	}
 	fractalFunc := fractalFuncUnasserted.(map[string]interface{})["func"].(func(interface{}, []float64) func(float64, float64, int) (float64, float64, float64, float64))
 
-	if len(constants) != fractals[fractalName].(map[string]interface{})["constants"].(int) {
+	if len(constants) != Fractals[fractalName].(map[string]interface{})["constants"].(int) {
 		fmt.Println("Invalid amount of constants.")
 		os.Exit(1)
 	}
 
-	colouringFunc, valid := fractals[fractalName].(map[string]interface{})["colourfuncs"].(map[string]interface{})[colouringFuncName]
+	colouringFunc, valid := Fractals[fractalName].(map[string]interface{})["colourfuncs"].(map[string]interface{})[colouringFuncName]
 
 	if valid != true {
 		fmt.Println("Invalid colouring function.")
