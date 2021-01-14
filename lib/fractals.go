@@ -127,9 +127,8 @@ var Fractals = []Fractal{
 		Description: "Classic burning ship function.",
 		Constants:   0,
 		ColorSchemes: []colorScheme{
-			simpleGreyscaleShip,
-			simpleGreyscaleShip,
-			wackyGrayscaleShip,
+			simpleGrayscale,
+			wackyGrayscale,
 		},
 		Fn: func(color colorFunc, constants []float64) PointFunc {
 			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {

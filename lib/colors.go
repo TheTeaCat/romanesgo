@@ -10,25 +10,25 @@ type colorScheme struct {
 }
 
 var defaultColors = []colorScheme{
-	simpleGreyscale,
-	simpleGreyscale,
+	simpleGrayscale,
+	simpleGrayscale,
 	wackyGrayscale,
-	zGreyscale,
-	smoothGreyscale,
+	zGrayscale,
+	smoothGrayscale,
 	smoothColor,
 	smoothColor2,
 }
 
-var simpleGreyscale = colorScheme{
-	Name: "simpleGreyscale",
+var simpleGrayscale = colorScheme{
+	Name: "simpleGrayscale",
 	Fn: func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
 		col := float64(255*iterations) / float64(iterationCap)
 		return col, col, col, 255
 	},
 }
 
-var simpleGreyscaleShip = colorScheme{
-	Name: "simpleGreyscaleShip",
+var simpleGrayscaleShip = colorScheme{
+	Name: "simpleGrayscaleShip",
 	Fn: func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
 		col := float64(255*iterations) / float64(iterationCap)
 		return col, col, col, 255
@@ -55,16 +55,16 @@ var wackyGrayscaleShip = colorScheme{
 	},
 }
 
-var zGreyscale = colorScheme{
-	Name: "zGreyscale",
+var zGrayscale = colorScheme{
+	Name: "zGrayscale",
 	Fn: func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
 		col := 255.0 * (math.Mod(z.abs(), 2.0) / 2.0)
 		return col, col, col, 255
 	},
 }
 
-var smoothGreyscale = colorScheme{
-	Name: "smoothGreyscale",
+var smoothGrayscale = colorScheme{
+	Name: "smoothGrayscale",
 	Fn: func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
 		z = z.mul(z).add(c)
 		iterations++
