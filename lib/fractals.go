@@ -14,7 +14,7 @@ var Fractals = map[string]interface{}{
 		"colourfuncs": map[string]interface{}{
 			"default":         simpleGreyscale,
 			"simplegreyscale": simpleGreyscale,
-			"whackygreyscale": whackyGrayscale,
+			"wackygreyscale": wackyGrayscale,
 			"zgreyscale":      zGreyscale,
 			"smoothgreyscale": smoothGreyscale,
 			"smoothcolour":    smoothColour,
@@ -28,7 +28,7 @@ var Fractals = map[string]interface{}{
 		"colourfuncs": map[string]interface{}{
 			"default":         simpleGreyscale,
 			"simplegreyscale": simpleGreyscale,
-			"whackygreyscale": whackyGrayscale,
+			"wackygreyscale": wackyGrayscale,
 			"zgreyscale":      zGreyscale,
 			"smoothgreyscale": smoothGreyscale,
 			"smoothcolour":    smoothColour,
@@ -42,7 +42,7 @@ var Fractals = map[string]interface{}{
 		"colourfuncs": map[string]interface{}{
 			"default":         simpleGreyscaleShip,
 			"simplegreyscale": simpleGreyscaleShip,
-			"whackygreyscale": whackyGrayscaleShip,
+			"wackygreyscale": wackyGrayscaleShip,
 		},
 	},
 }

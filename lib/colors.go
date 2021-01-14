@@ -12,14 +12,14 @@ func simpleGreyscaleShip(iterations, iterationCap int, z complex) (R, G, B, A fl
 	return col, col, col, 255
 }
 
-func whackyGrayscale(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
+func wackyGrayscale(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
 	if iterations%2 == 0 {
 		return 0, 0, 0, 255
 	}
 	return 255, 255, 255, 255
 }
 
-func whackyGrayscaleShip(iterations, iterationCap int, z complex) (R, G, B, A float64) {
+func wackyGrayscaleShip(iterations, iterationCap int, z complex) (R, G, B, A float64) {
 	if iterations%2 == 0 {
 		return 0, 0, 0, 255
 	}
