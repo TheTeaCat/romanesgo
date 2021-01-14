@@ -21,7 +21,7 @@ Flags:
   -c value
         constants
   -cf string
-        colouring function (default "default")
+        coloring function (default "default")
   -ff string
         fractal (default "none")
   -fn string
@@ -56,7 +56,7 @@ $ ./romanesgo -ff=burningship -x=-1.748 -y=0.035 -z=20 -ss=4 -w=25000 -h=25000 -
 	Fractal (ff):		 burningship 
 	Constants (c):		  
 	Max Iterations (i):	 128 
-	Colouring function (cf): default 
+	Coloring function (cf): default 
 	Centre x Coord (x):	 -1.748 
 	Centre y Coord (y):	 0.035 
 	Zoom factor (z):	 20 
@@ -89,7 +89,7 @@ Oh, and that's with supersampling set to 4, so it's making 16 samples per pixel,
 
 | burningship.png                                              | julia4.png                                                   |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| -w=2000 -h=2600 -ff=burningship -x=-1.749 -y=0.037 -z=20 -i=256 -ss=2 | -w=2000 -h=2600 -ff=julia -c=0.1 -c=0.7 -z=0.75 -ss=2 -cf=smoothcolour |
+| -w=2000 -h=2600 -ff=burningship -x=-1.749 -y=0.037 -z=20 -i=256 -ss=2 | -w=2000 -h=2600 -ff=julia -c=0.1 -c=0.7 -z=0.75 -ss=2 -cf=smoothcolor |
 | ![burningship.png](./samples/burningship.png)       | ![julia4.png](./samples/julia4.png)                 |
 
 

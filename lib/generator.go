@@ -1,13 +1,16 @@
 package lib
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 	"sync"
 )
 
-type gen struct {
+// PointFunc is an integrated fractal & color function used by a generator
+type PointFunc func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64)
+
+// Generator is our runner!
+type Generator struct {
 	Img          *image.NRGBA
 	xPos         float64
 	yPos         float64
@@ -17,56 +20,63 @@ type gen struct {
 	height       int
 	routines     int
 	iterationCap int
+	fn           PointFunc
+	samples      int
 }
 
-func NewGenerator(width, height, routines, iterationCap int, xPos, yPos, zoom float64) gen {
-	newGen := gen{
-		width:        width,
-		height:       height,
-		routines:     routines,
-		iterationCap: iterationCap,
-		xPos:         xPos,
-		yPos:         yPos,
-		zoom:         zoom,
-		Img:          image.NewNRGBA(image.Rect(0, 0, width, height)),
-	}
+// NewGenerator returns a generator!
+func NewGenerator(width, height, routines, iterationCap int, xPos, yPos, zoom float64, fn PointFunc, samples int) Generator {
 
-	//Picks the smaller of the two dimensions (width and height) and uses that length in pixels as the length of 2 divided by the zoom factor as the scale for both axis.
-	if newGen.width < newGen.height {
-		newGen.scaler = float64(newGen.width)
+	// Pick the smaller of the two dimensions (width and height) and use that length in
+	// pixels as the length of 2 divided by the zoom factor as the scale for both axis.
+	var scaler float64
+	if width < height {
+		scaler = float64(width)
 	} else {
-		newGen.scaler = float64(newGen.height)
+		scaler = float64(height)
 	}
 
-	return newGen
-
+	return Generator{
+		image.NewNRGBA(image.Rect(0, 0, width, height)),
+		xPos,
+		yPos,
+		zoom,
+		scaler,
+		width,
+		height,
+		routines,
+		iterationCap,
+		fn,
+		samples,
+	}
 }
 
-func (f gen) pixToCoord(xPix, yPix float64) (xCoord, yCoord float64) {
-	xCoord = ((xPix - (float64(f.width) / 2)) * ((2 / f.scaler) / f.zoom)) + f.xPos
-	yCoord = ((yPix - (float64(f.height) / 2)) * ((2 / f.scaler) / f.zoom)) + f.yPos
-	return xCoord, yCoord
-}
-
-func (f gen) Generate(pointFunc func(float64, float64, int) (R, G, B, A float64), samples int) {
+// Generate spins out our workers!
+func (f Generator) Generate() {
 	var wg sync.WaitGroup
 	wg.Add(f.routines)
 
 	for routine := 0; routine < f.routines; routine++ {
-		go f.genRoutine(&wg, routine, samples, pointFunc)
+		go f.genRoutine(&wg, routine)
 	}
 
 	wg.Wait()
 }
 
-func (f gen) genRoutine(wg *sync.WaitGroup, rno int, samples int, pointFunc func(float64, float64, int) (R, G, B, A float64)) {
+func (f Generator) pixToCoord(xPix, yPix float64) (xCoord, yCoord float64) {
+	xCoord = ((xPix - (float64(f.width) / 2)) * ((2 / f.scaler) / f.zoom)) + f.xPos
+	yCoord = ((yPix - (float64(f.height) / 2)) * ((2 / f.scaler) / f.zoom)) + f.yPos
+	return xCoord, yCoord
+}
 
-	offsets := make([]float64, samples)
+func (f Generator) genRoutine(wg *sync.WaitGroup, rno int) {
+	offsets := make([]float64, f.samples)
 
-	for sample := 0; sample < samples; sample++ {
-		offsets[sample] = (1 + float64(2*sample) - float64(samples)) / float64(2*(samples))
+	for sample := 0; sample < f.samples; sample++ {
+		offsets[sample] = (1 + float64(2*sample) - float64(f.samples)) / float64(2*(f.samples))
 	}
-	samplesSquared := float64(samples * samples) //Keeping as many recalculated values outside of the for loops as possible.
+	// Keeping as many recalculated values outside of the for loops as possible.
+	samplesSquared := float64(f.samples * f.samples)
 
 	routines := f.routines
 	size := f.width * f.height
@@ -76,11 +86,11 @@ func (f gen) genRoutine(wg *sync.WaitGroup, rno int, samples int, pointFunc func
 
 		R, G, B, A := 0.0, 0.0, 0.0, 0.0
 
-		for xSample := 0; xSample < samples; xSample++ {
-			for ySample := 0; ySample < samples; ySample++ {
+		for xSample := 0; xSample < f.samples; xSample++ {
+			for ySample := 0; ySample < f.samples; ySample++ {
 				xCoord, yCoord := f.pixToCoord(float64(xPix)+offsets[xSample], float64(yPix)+offsets[ySample])
 
-				r, g, b, a := pointFunc(xCoord, yCoord, f.iterationCap)
+				r, g, b, a := f.fn(xCoord, yCoord, f.iterationCap)
 
 				R, G, B, A = R+(r/samplesSquared),
 					G+(g/samplesSquared),
@@ -90,7 +100,6 @@ func (f gen) genRoutine(wg *sync.WaitGroup, rno int, samples int, pointFunc func
 		}
 		f.Img.Set(xPix, yPix, color.RGBA{uint8(R), uint8(G), uint8(B), uint8(A)})
 	}
-	fmt.Println("Routine", rno, "Done.")
 
 	wg.Done()
 }
