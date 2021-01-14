@@ -1,6 +1,8 @@
 package lib
 
-import "math"
+import (
+	"math"
+)
 
 type colorFunc func(iterations, iterationCap int, z, c complex) (R, G, B, A float64)
 
@@ -13,6 +15,7 @@ var defaultColors = []colorScheme{
 	simpleGrayscale,
 	simpleGrayscale,
 	wackyGrayscale,
+	wackyRainbow,
 	zGrayscale,
 	smoothGrayscale,
 	smoothColor,
@@ -27,32 +30,35 @@ var simpleGrayscale = colorScheme{
 	},
 }
 
-var simpleGrayscaleShip = colorScheme{
-	Name: "simpleGrayscaleShip",
-	Fn: func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
-		col := float64(255*iterations) / float64(iterationCap)
-		return col, col, col, 255
-	},
+// returns a color func that cycles through the set of colors passed in
+func wacky(colors [][4]float64) colorFunc {
+	return func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
+		key := iterations % len(colors)
+		color := colors[key]
+		return color[0], color[1], color[2], color[3]
+	}
 }
 
 var wackyGrayscale = colorScheme{
 	Name: "wackyGrayscale",
-	Fn: func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
-		if iterations%2 == 0 {
-			return 0, 0, 0, 255
-		}
-		return 255, 255, 255, 255
-	},
+	Fn: wacky([][4]float64{
+		[4]float64{0, 0, 0, 255},
+		[4]float64{255, 255, 255, 255},
+	}),
 }
 
-var wackyGrayscaleShip = colorScheme{
-	Name: "wackyGrayscaleShip",
-	Fn: func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
-		if iterations%2 == 0 {
-			return 0, 0, 0, 255
-		}
-		return 255, 255, 255, 255
-	},
+var wackyRainbow = colorScheme{
+	Name: "wackyRainbow",
+	Fn: wacky([][4]float64{
+		[4]float64{84, 110, 98, 255},   // grey-green
+		[4]float64{79, 127, 135, 255},  // turq
+		[4]float64{110, 93, 158, 255},  // purp
+		[4]float64{167, 125, 197, 255}, // pale purp
+		[4]float64{255, 142, 145, 255}, // coral
+		[4]float64{233, 186, 90, 255},  // orange
+		[4]float64{231, 236, 128, 255}, // pale yellow
+		[4]float64{135, 175, 95, 255},  // neon green
+	}),
 }
 
 var zGrayscale = colorScheme{

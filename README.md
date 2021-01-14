@@ -98,10 +98,10 @@ Oh, and that's with supersampling set to 4, so it's making 16 samples per pixel,
 | -w=2600 -h=2000 -ff=mandelbrot -x=-0.82 -y=-0.1905 -z=50 -i=512 -ss=2 -cf=smoothgrayscale | -w=2600 -h=2000 -ff=julia -c=-0.2 -c=0.65 -z=5 -i=512 -ss=2 -cf=wackygrayscale |
 | ![mandelbrot2.png](./samples/mandelbrot2.png)       | ![julia2.png](./samples/julia2.png)                 |
 
-| julia3.png                                                   |
-| ------------------------------------------------------------ |
-| -w=2600 -h=2000 -ff=julia -c=-1 -c=-0.25 -z=1.5 -i=512 -ss=2 -cf=zgrayscale |
-| ![julia3.png](./samples/julia3.png)                 |
+| julia3.png                                                   | wacky-rainbow.png
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| -w=2600 -h=2000 -ff=julia -c=-1 -c=-0.25 -z=1.5 -i=512 -ss=2 -cf=zgrayscale | -w=660 -h=1020 -ff=julia -c=-0.22 -c=0.65 -z=8 -i=800 -ss=4 -cf=wackyrainbow |
+| ![julia3.png](./samples/julia3.png)                 | ![wacky-rainbow.png](./samples/wacky-rainbow.png)|
 
 
 
