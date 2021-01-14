@@ -49,7 +49,7 @@ func main() {
 			"\n\tRoutines (r):\t\t", *routines,
 			"\n\tFilename (png) (fn):\t", *fn, "\n\n")
 
-		gen := lib.NewGenerator(*width, *height, *routines, *iterations, *xCentre, -*yCentre, *zoom, pointFunc, *samples)
+		gen := lib.NewGenerator(*width, *height, *routines, *iterations, *samples, *xCentre, -*yCentre, *zoom, pointFunc)
 
 		newFile, err := os.Create(*fn)
 		fatal(err)

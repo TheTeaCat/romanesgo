@@ -25,7 +25,7 @@ type Generator struct {
 }
 
 // NewGenerator returns a generator!
-func NewGenerator(width, height, routines, iterationCap int, xPos, yPos, zoom float64, fn PointFunc, samples int) Generator {
+func NewGenerator(width, height, routines, iterationCap, samples int, xPos, yPos, zoom float64, fn PointFunc) Generator {
 
 	// Pick the smaller of the two dimensions (width and height) and use that length in
 	// pixels as the length of 2 divided by the zoom factor as the scale for both axis.
