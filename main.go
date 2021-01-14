@@ -31,7 +31,7 @@ func main() {
 	args := flag.Args()
 
 	if len(args) > 0 && args[0] == "help" {
-		handleHelp(args, *fractalName)
+		handleHelp(args)
 	} else {
 		pointFunc, err := lib.GetPointFunc(*fractalName, *colorName, constants)
 		fatal(err)
@@ -63,7 +63,7 @@ func main() {
 	}
 }
 
-func handleHelp(args []string, fractalName string) {
+func handleHelp(args []string) {
 	if len(args) == 1 {
 		fmt.Print(`Do "romanesgo help {Fractal Name}" for further info on a particular fractal function.`)
 		fmt.Println("Fractals:")
