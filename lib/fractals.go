@@ -7,29 +7,30 @@ import (
 	"strings"
 )
 
+// Named errors might be helpful for matching outside this lib
 var (
 	ErrInvalidColor   = errors.New("invalid color scheme name")
 	ErrInvalidFractal = errors.New("invalid fractal name")
 )
 
-type fractalFunc func(colorFunc colorFunc, constants []float64) PointFunc
+type fractalFunc func(color colorFunc, constants []float64) PointFunc
 
 // Fractal gontains everything you need to get a colorized point function for our generator
 type Fractal struct {
 	Name         string
-	description  string
-	constants    int
-	colorSchemes []colorScheme
-	fn           fractalFunc
+	Description  string
+	Constants    int
+	ColorSchemes []colorScheme
+	Fn           fractalFunc
 }
 
 // String outputs basic info for the help screen
 func (f Fractal) String() string {
-	colorSchemes := make([]string, len(f.colorSchemes))
-	for i, cs := range f.colorSchemes {
+	colorSchemes := make([]string, len(f.ColorSchemes))
+	for i, cs := range f.ColorSchemes {
 		colorSchemes[i] = cs.Name
 	}
-	return fmt.Sprintf("%s\n%s\nColor Schemes: %s", f.Name, f.description, strings.Join(colorSchemes, ", "))
+	return fmt.Sprintf("%s\n%s\nColor Schemes: %s", f.Name, f.Description, strings.Join(colorSchemes, ", "))
 }
 
 // GetPointFunc will check for valid fractalname and colorname
@@ -42,13 +43,13 @@ func GetPointFunc(fractalName, colorName string, constants []float64) (PointFunc
 	}
 
 	// check constants
-	if len(constants) != frac.constants {
+	if len(constants) != frac.Constants {
 		return nil, errors.New("invalid number of constants")
 	}
 
 	// check colorScheme
 	var color *colorScheme
-	for _, cs := range frac.colorSchemes {
+	for _, cs := range frac.ColorSchemes {
 		if strings.ToLower(cs.Name) == strings.ToLower(colorName) {
 			color = &cs
 			break
@@ -59,7 +60,7 @@ func GetPointFunc(fractalName, colorName string, constants []float64) (PointFunc
 		return nil, ErrInvalidColor
 	}
 
-	return frac.fn(color.Fn, constants), nil
+	return frac.Fn(color.Fn, constants), nil
 }
 
 // GetFractal returns a fractal if the name is valid
@@ -83,10 +84,10 @@ func GetFractal(fractalName string) (frac *Fractal, err error) {
 var Fractals = []Fractal{
 	Fractal{
 		Name:         "mandelbrot",
-		description:  "Classic mandelbrot function.",
-		constants:    0,
-		colorSchemes: defaultColors,
-		fn: func(colorFunc colorFunc, constants []float64) PointFunc {
+		Description:  "Classic mandelbrot function.",
+		Constants:    0,
+		ColorSchemes: defaultColors,
+		Fn: func(color colorFunc, constants []float64) PointFunc {
 			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
 				c := complex{xCoord, yCoord}
 				z := complex{0.0, 0.0}
@@ -96,17 +97,17 @@ var Fractals = []Fractal{
 					z = z.mul(z).add(c)
 				}
 
-				return colorFunc(iterations, iterationCap, z, c)
+				return color(iterations, iterationCap, z, c)
 			}
 		},
 	},
 
 	Fractal{
 		Name:         "julia",
-		description:  "Classic Julia function.\nThe two constants are the real and imaginary components of C.",
-		constants:    2,
-		colorSchemes: defaultColors,
-		fn: func(colorFunc colorFunc, constants []float64) PointFunc {
+		Description:  "Classic Julia function.\nThe two constants are the real and imaginary components of C.",
+		Constants:    2,
+		ColorSchemes: defaultColors,
+		Fn: func(color colorFunc, constants []float64) PointFunc {
 			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
 				c := complex{constants[0], constants[1]}
 				z := complex{xCoord, yCoord}
@@ -116,21 +117,21 @@ var Fractals = []Fractal{
 					z = z.mul(z).add(c)
 				}
 
-				return colorFunc(iterations, iterationCap, z, c)
+				return color(iterations, iterationCap, z, c)
 			}
 		},
 	},
 
 	Fractal{
 		Name:        "burningship",
-		description: "Classic burning ship function.",
-		constants:   0,
-		colorSchemes: []colorScheme{
+		Description: "Classic burning ship function.",
+		Constants:   0,
+		ColorSchemes: []colorScheme{
 			simpleGreyscaleShip,
 			simpleGreyscaleShip,
 			wackyGrayscaleShip,
 		},
-		fn: func(colorFunc colorFunc, constants []float64) PointFunc {
+		Fn: func(color colorFunc, constants []float64) PointFunc {
 			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
 				z := complex{0, 0}
 				iterations := 0
@@ -141,7 +142,7 @@ var Fractals = []Fractal{
 					z.real = newReal
 				}
 
-				return colorFunc(iterations, iterationCap, z, complex{0, 0})
+				return color(iterations, iterationCap, z, complex{0, 0})
 			}
 		},
 	},

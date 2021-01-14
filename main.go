@@ -88,9 +88,9 @@ func fatal(err error) {
 }
 
 func timeIt(fn func()) {
-	startTime := time.Now()
+	start := time.Now()
 	fn()
-	fmt.Println("Done in", time.Since(startTime))
+	fmt.Println("Done in", time.Since(start))
 }
 
 type flagConstants []float64
