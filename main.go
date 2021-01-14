@@ -48,6 +48,7 @@ func main() {
 	var constants flagConstants
 	flag.Var(&constants, "c", "constants")
 	iterations := flag.Int("i", 128, "maximum iterations")
+	precision := flag.Uint("p", 53, "precision of floating point numbers")
 	colourFunc := flag.String("cf", "default", "colouring function")
 	xCentre := flag.Float64("x", 0, "central x coord")
 	yCentre := flag.Float64("y", 0, "central y coord")
@@ -94,6 +95,7 @@ func main() {
 		fmt.Println("\n\tFractal (ff):\t\t", *fractalFunc,
 			"\n\tConstants (c):\t\t", constants.String(),
 			"\n\tMax Iterations (i):\t", *iterations,
+			"\n\tPrecision (p):\t\t", *precision,
 			"\n\tColouring function (cf):", *colourFunc,
 			"\n\tCentre x Coord (x):\t", *xCentre,
 			"\n\tCentre y Coord (y):\t", *yCentre,
@@ -103,7 +105,7 @@ func main() {
 			"\n\tSupersampling (ss):\t", *samples,
 			"\n\tRoutines (r):\t\t", *routines,
 			"\n\tFilename (png) (fn):\t", *fn, "\n")
-		f := getNewFractGen(*width, *height, *routines, *iterations, *xCentre, -*yCentre, *zoom)
+		f := getNewFractGen(*width, *height, *routines, *iterations, *precision, *xCentre, -*yCentre, *zoom)
 
 		startTime := time.Now()
 		f.generate(getFractalFunction(strings.ToLower(*fractalFunc), strings.ToLower(*colourFunc), constants), *samples)

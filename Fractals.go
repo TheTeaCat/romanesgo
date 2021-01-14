@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"math"
+	"math/big"
 	"os"
 )
 
@@ -47,13 +47,13 @@ var fractals = map[string]interface{}{
 	},
 }
 
-func getFractalFunction(fractalName, colouringFuncName string, constants []float64) func(float64, float64, int) (R, G, B, A float64) {
+func getFractalFunction(fractalName, colouringFuncName string, constants []float64) func(*big.Float, *big.Float, int) (R, G, B, A float64) {
 	fractalFuncUnasserted, valid := fractals[fractalName] //Asserted after validation because if the fractal function's wrong, we'd try to assert nil.
 	if valid != true {
 		fmt.Println("Invalid fractal function.")
 		os.Exit(1)
 	}
-	fractalFunc := fractalFuncUnasserted.(map[string]interface{})["func"].(func(interface{}, []float64) func(float64, float64, int) (float64, float64, float64, float64))
+	fractalFunc := fractalFuncUnasserted.(map[string]interface{})["func"].(func(interface{}, []float64) func(*big.Float, *big.Float, int) (float64, float64, float64, float64))
 
 	if len(constants) != fractals[fractalName].(map[string]interface{})["constants"].(int) {
 		fmt.Println("Invalid amount of constants.")
@@ -70,15 +70,15 @@ func getFractalFunction(fractalName, colouringFuncName string, constants []float
 	return fractalFunc(colouringFunc, constants)
 }
 
-func mandelbrot(colourFuncUnasserted interface{}, constants []float64) func(float64, float64, int) (R, G, B, A float64) {
+func mandelbrot(colourFuncUnasserted interface{}, constants []float64) func(*big.Float, *big.Float, int) (R, G, B, A float64) {
 	colourFunc := colourFuncUnasserted.(func(int, int, complex, complex) (R, G, B, A float64))
 
-	getMandelPoint := func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
+	getMandelPoint := func(xCoord, yCoord *big.Float, iterationCap int) (R, G, B, A float64) {
 		c := complex{xCoord, yCoord}
-		z := complex{0.0, 0.0}
+		z := complex{new(big.Float), new(big.Float)}
 		iterations := 0
 
-		for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
+		for iterations = 0; z.abs().Cmp(big.NewFloat(2.0)) <= 0 && iterations < iterationCap; iterations++ {
 			z = z.mul(z).add(c)
 		}
 
@@ -87,15 +87,15 @@ func mandelbrot(colourFuncUnasserted interface{}, constants []float64) func(floa
 	return getMandelPoint
 }
 
-func julia(colourFuncUnasserted interface{}, constants []float64) func(float64, float64, int) (R, G, B, A float64) {
+func julia(colourFuncUnasserted interface{}, constants []float64) func(*big.Float, *big.Float, int) (R, G, B, A float64) {
 	colourFunc := colourFuncUnasserted.(func(int, int, complex, complex) (R, G, B, A float64))
 
-	getJuliaPoint := func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
-		c := complex{constants[0], constants[1]}
+	getJuliaPoint := func(xCoord, yCoord *big.Float, iterationCap int) (R, G, B, A float64) {
+		c := complex{big.NewFloat(constants[0]), big.NewFloat(constants[1])}
 		z := complex{xCoord, yCoord}
 		iterations := 0
 
-		for iterations = 0; z.mul(z).add(c).abs() <= 2 && iterations < iterationCap; iterations++ {
+		for iterations = 0; z.mul(z).add(c).abs().Cmp(big.NewFloat(2.0)) <= 0 && iterations < iterationCap; iterations++ {
 			z = z.mul(z).add(c)
 		}
 
@@ -104,16 +104,24 @@ func julia(colourFuncUnasserted interface{}, constants []float64) func(float64, 
 	return getJuliaPoint
 }
 
-func burningShip(colourFuncUnasserted interface{}, constants []float64) func(float64, float64, int) (R, G, B, A float64) {
+func burningShip(colourFuncUnasserted interface{}, constants []float64) func(*big.Float, *big.Float, int) (R, G, B, A float64) {
 	colourFunc := colourFuncUnasserted.(func(int, int, complex) (R, G, B, A float64))
 
-	getShipPoint := func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
-		z := complex{0, 0}
+	getShipPoint := func(xCoord, yCoord *big.Float, iterationCap int) (R, G, B, A float64) {
+		z := complex{big.NewFloat(0), big.NewFloat(0)}
 		iterations := 0
 
-		for iterations = 0; z.abs() <= 10 && iterations < iterationCap; iterations++ {
-			newReal := (z.real * z.real) - (z.imag * z.imag) + xCoord
-			z.imag = (2 * math.Abs(z.real) * math.Abs(z.imag)) + yCoord
+		for iterations = 0; z.abs().Cmp(big.NewFloat(10.0)) <= 0 && iterations < iterationCap; iterations++ {
+			zrzr := new(big.Float).Mul(z.real, z.real)
+			zizi := new(big.Float).Mul(z.imag, z.imag)
+			newReal := new(big.Float).Sub(zrzr, zizi)
+			newReal.Add(newReal, xCoord)
+
+			newImag := new(big.Float).Mul(new(big.Float).Abs(z.real), new(big.Float).Abs(z.imag))
+			newImag.Mul(newImag, big.NewFloat(2.0))
+			newImag.Add(newImag, yCoord)
+
+			z.imag = newImag
 			z.real = newReal
 		}
 

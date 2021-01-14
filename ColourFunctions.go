@@ -27,7 +27,8 @@ func whackyGrayscaleShip(iterations, iterationCap int, z complex) (R, G, B, A fl
 }
 
 func zGreyscale(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
-	col := 255.0 * (math.Mod(z.abs(), 2.0) / 2.0)
+	zabs, _ := z.abs().Float64()
+	col := 255.0 * (math.Mod(zabs, 2.0) / 2.0)
 	return col, col, col, 255
 }
 
@@ -40,7 +41,8 @@ func smoothGreyscale(iterations, iterationCap int, z, c complex) (R, G, B, A flo
 	i := float64(iterations)
 
 	if iterations < iterationCap {
-		i = i - (math.Log(math.Log(z.abs())) / math.Log(2))
+		zabs, _ := z.abs().Float64()
+		i = i - (math.Log(math.Log(zabs)) / math.Log(2))
 	}
 
 	if int(math.Floor(i))%2 == 0 {
@@ -61,7 +63,8 @@ func smoothColour(iterations, iterationCap int, z, c complex) (R, G, B, A float6
 	i := float64(iterations)
 
 	if iterations < iterationCap {
-		i = i - (math.Log(math.Log(z.abs())) / math.Log(2))
+		zabs, _ := z.abs().Float64()
+		i = i - (math.Log(math.Log(zabs)) / math.Log(2))
 	}
 
 	nu := math.Mod(i, 1)
@@ -86,7 +89,8 @@ func smoothColour2(iterations, iterationCap int, z, c complex) (R, G, B, A float
 	i := float64(iterations)
 
 	if iterations < iterationCap {
-		i = i - (math.Log(math.Log(z.abs())) / math.Log(2))
+		zabs, _ := z.abs().Float64()
+		i = i - (math.Log(math.Log(zabs) / math.Log(2)))
 	}
 
 	nu := math.Mod(i, 1)

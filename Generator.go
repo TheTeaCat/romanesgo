@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"image"
 	"image/color"
+	"math/big"
 	"sync"
 )
 
@@ -17,14 +18,16 @@ type fractGen struct {
 	height       int
 	routines     int
 	iterationCap int
+	precision    uint
 }
 
-func getNewFractGen(width, height, routines, iterationCap int, xPos, yPos, zoom float64) fractGen {
+func getNewFractGen(width, height, routines, iterationCap int, precision uint, xPos, yPos, zoom float64) fractGen {
 	newFractGen := fractGen{
 		width:        width,
 		height:       height,
 		routines:     routines,
 		iterationCap: iterationCap,
+		precision:    precision,
 		xPos:         xPos,
 		yPos:         yPos,
 		zoom:         zoom,
@@ -42,13 +45,24 @@ func getNewFractGen(width, height, routines, iterationCap int, xPos, yPos, zoom 
 
 }
 
-func (f fractGen) pixToCoord(xPix, yPix float64) (xCoord, yCoord float64) {
-	xCoord = ((xPix - (float64(f.width) / 2)) * ((2 / f.scaler) / f.zoom)) + f.xPos
-	yCoord = ((yPix - (float64(f.height) / 2)) * ((2 / f.scaler) / f.zoom)) + f.yPos
+func (f fractGen) pixToCoord(xPix, yPix float64) (xCoord, yCoord *big.Float) {
+	//Shifting the origin to the center of the image
+	xCoord = new(big.Float).SetPrec(f.precision).Sub(big.NewFloat(xPix), big.NewFloat(float64(f.width)/2))
+	yCoord = new(big.Float).SetPrec(f.precision).Sub(big.NewFloat(yPix), big.NewFloat(float64(f.height)/2))
+
+	//Scaling the pixels down to values on the complex plane
+	scaler := new(big.Float).Quo(big.NewFloat(2/f.scaler), big.NewFloat(f.zoom))
+	xCoord.Mul(xCoord, scaler)
+	yCoord.Mul(yCoord, scaler)
+
+	//Shifting the origin over to the xPos and yPos on the complex plane
+	xCoord.Add(xCoord, big.NewFloat(f.xPos))
+	yCoord.Add(yCoord, big.NewFloat(f.yPos))
+
 	return xCoord, yCoord
 }
 
-func (f fractGen) generate(pointFunc func(float64, float64, int) (R, G, B, A float64), samples int) {
+func (f fractGen) generate(pointFunc func(*big.Float, *big.Float, int) (R, G, B, A float64), samples int) {
 	var wg sync.WaitGroup
 	wg.Add(f.routines)
 
@@ -59,7 +73,7 @@ func (f fractGen) generate(pointFunc func(float64, float64, int) (R, G, B, A flo
 	wg.Wait()
 }
 
-func (f fractGen) genRoutine(wg *sync.WaitGroup, rno int, samples int, pointFunc func(float64, float64, int) (R, G, B, A float64)) {
+func (f fractGen) genRoutine(wg *sync.WaitGroup, rno int, samples int, pointFunc func(*big.Float, *big.Float, int) (R, G, B, A float64)) {
 
 	offsets := make([]float64, samples)
 
