@@ -78,7 +78,7 @@ func mandelbrot(colourFuncUnasserted interface{}, constants []float64) func(*big
 		z := complex{new(big.Float), new(big.Float)}
 		iterations := 0
 
-		for iterations = 0; z.abs().Cmp(big.NewFloat(2.0)) <= 0 && iterations < iterationCap; iterations++ {
+		for iterations = 0; z.absq().Cmp(big.NewFloat(4.0)) <= 0 && iterations < iterationCap; iterations++ {
 			z = z.mul(z).add(c)
 		}
 
@@ -95,7 +95,7 @@ func julia(colourFuncUnasserted interface{}, constants []float64) func(*big.Floa
 		z := complex{xCoord, yCoord}
 		iterations := 0
 
-		for iterations = 0; z.mul(z).add(c).abs().Cmp(big.NewFloat(2.0)) <= 0 && iterations < iterationCap; iterations++ {
+		for iterations = 0; z.mul(z).add(c).absq().Cmp(big.NewFloat(4.0)) <= 0 && iterations < iterationCap; iterations++ {
 			z = z.mul(z).add(c)
 		}
 
@@ -111,7 +111,7 @@ func burningShip(colourFuncUnasserted interface{}, constants []float64) func(*bi
 		z := complex{big.NewFloat(0), big.NewFloat(0)}
 		iterations := 0
 
-		for iterations = 0; z.abs().Cmp(big.NewFloat(10.0)) <= 0 && iterations < iterationCap; iterations++ {
+		for iterations = 0; z.absq().Cmp(big.NewFloat(100.0)) <= 0 && iterations < iterationCap; iterations++ {
 			zrzr := new(big.Float).Mul(z.real, z.real)
 			zizi := new(big.Float).Mul(z.imag, z.imag)
 			newReal := new(big.Float).Sub(zrzr, zizi)

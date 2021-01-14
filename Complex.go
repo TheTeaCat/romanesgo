@@ -9,6 +9,13 @@ type complex struct {
 	imag *big.Float
 }
 
+//Returns the square of the absolute value (because square rooting is costly)
+// (Squared Euclidean Distance)
+func (c complex) absq() *big.Float {
+	v := new(big.Float).Mul(c.real, c.real)
+	return v.Add(v, new(big.Float).Mul(c.imag, c.imag))
+}
+
 func (c complex) abs() *big.Float {
 	return new(big.Float).Sqrt(
 		new(big.Float).Add(
