@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"image/color"
 	"math"
 )
 
@@ -31,33 +32,33 @@ var simpleGrayscale = colorScheme{
 }
 
 // returns a color func that cycles through the set of colors passed in
-func wacky(colors [][4]float64) colorFunc {
+func wacky(colors []color.RGBA) colorFunc {
 	return func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
 		key := iterations % len(colors)
 		color := colors[key]
-		return color[0], color[1], color[2], color[3]
+		return float64(color.R), float64(color.G), float64(color.B), float64(color.A)
 	}
 }
 
 var wackyGrayscale = colorScheme{
 	Name: "wackyGrayscale",
-	Fn: wacky([][4]float64{
-		[4]float64{0, 0, 0, 255},
-		[4]float64{255, 255, 255, 255},
+	Fn: wacky([]color.RGBA{
+		color.RGBA{0, 0, 0, 255},
+		color.RGBA{255, 255, 255, 255},
 	}),
 }
 
 var wackyRainbow = colorScheme{
 	Name: "wackyRainbow",
-	Fn: wacky([][4]float64{
-		[4]float64{84, 110, 98, 255},   // grey-green
-		[4]float64{79, 127, 135, 255},  // turq
-		[4]float64{110, 93, 158, 255},  // purp
-		[4]float64{167, 125, 197, 255}, // pale purp
-		[4]float64{255, 142, 145, 255}, // coral
-		[4]float64{233, 186, 90, 255},  // orange
-		[4]float64{231, 236, 128, 255}, // pale yellow
-		[4]float64{135, 175, 95, 255},  // neon green
+	Fn: wacky([]color.RGBA{
+		color.RGBA{84, 110, 98, 255},   // grey-green
+		color.RGBA{79, 127, 135, 255},  // turq
+		color.RGBA{110, 93, 158, 255},  // purp
+		color.RGBA{167, 125, 197, 255}, // pale purp
+		color.RGBA{255, 142, 145, 255}, // coral
+		color.RGBA{233, 186, 90, 255},  // orange
+		color.RGBA{231, 236, 128, 255}, // pale yellow
+		color.RGBA{135, 175, 95, 255},  // neon green
 	}),
 }
 
