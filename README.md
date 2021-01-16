@@ -2,7 +2,18 @@
 
 A simple fractal exploration program, named after the "cooler" version of broccoli.
 
+Supported Fractals:
 
+ - [The Mandelbrot set](#the-mandelbrot-set)
+ - [Julia sets](#a-julia-set)
+ - [The Burning Ship fractal](#the-burning-ship-fractal)
+ - [The Collatz fractal](#the-collatz-fractal)
+
+## Contents
+
+ - [Usage](#usage)
+ - [Performance](#performance)
+ - [Example Images](#example-images)
 
 ## Usage
 
@@ -81,28 +92,74 @@ Oh, and that's with supersampling set to 4, so it's making 16 samples per pixel,
 
 ## Example images
 
-| mandelbrot.png                                               | julia.png                                                    |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| -w=2600 -h=2000 -ff=mandelbrot -x=-0.65 -z=0.8 -i=1024 -ss=2 | -w=2600 -h=2000 -ff=julia -c=-0.2 -c=0.65 -z=0.9 -i=512 -ss=2 |
-| ![mandelbrot.png](./samples/mandelbrot.png)         | ![julia.png](./samples/julia.png)                   |
+### The Mandelbrot set
+```
+-w=2600 -h=2000 -ff=mandelbrot -x=-0.65 -z=0.8 -i=1024 -ss=2
+```
+<p align="center">
+	<img src="./samples/mandelbrot.png" width="70%">
+<p>
 
-| burningship.png                                              | julia4.png                                                   |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| -w=2000 -h=2600 -ff=burningship -x=-1.749 -y=0.037 -z=20 -i=256 -ss=2 | -w=2000 -h=2600 -ff=julia -c=0.1 -c=0.7 -z=0.75 -ss=2 -cf=smoothcolor |
-| ![burningship.png](./samples/burningship.png)       | ![julia4.png](./samples/julia4.png)                 |
+### A Julia set
+```
+-w=2600 -h=2000 -ff=julia -c=-0.2 -c=0.65 -z=0.9 -i=512 -ss=2
+```
+<p align="center">
+	<img src="./samples/julia.png" width="70%">
+</p>
 
+### The Burning Ship fractal
+```
+-w=2000 -h=2600 -ff=burningship -x=-1.749 -y=0.037 -z=20 -i=256 -ss=2
+```
+<p align="center">
+	<img src="./samples/burningship.png" width="70%">
+</p>
 
-| collatz.png                                                  | julia2.png                                                   |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| -ff=collatz -cf=wackyGrayscale -z=0.5 -w=2600 -h=2000 -ss=4 -i=8 | -w=2600 -h=2000 -ff=julia -c=-0.2 -c=0.65 -z=5 -i=512 -ss=2 -cf=wackygrayscale |
-| ![collatz.png](./samples/collatz.png)                        | ![julia2.png](./samples/julia2.png)                          |
+### The Collatz fractal
+```
+-ff=collatz -cf=wackyGrayscale -z=0.5 -w=2600 -h=2000 -ss=4 -i=8
+```
+<p align="center">
+	<img src="./samples/collatz.png" width="70%">
+</p>
 
-| julia3.png                                                   | mandelbrot2.png |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| -w=2600 -h=2000 -ff=julia -c=-1 -c=-0.25 -z=1.5 -i=512 -ss=2 -cf=zgrayscale | -w=2600 -h=2000 -ff=mandelbrot -x=-0.82 -y=-0.1905 -z=50 -i=512 -ss=2 -cf=smoothgrayscale |
-| ![julia3.png](./samples/julia3.png)                 | ![mandelbrot2.png](./samples/mandelbrot2.png) |
+### A smoothed RGB colouring function
+```
+-w=2000 -h=2600 -ff=julia -c=0.1 -c=0.7 -z=0.75 -ss=2 -cf=smoothcolor
+```
+<p align="center">
+	<img src="./samples/julia4.png" width="70%">
+</p>
 
-| wacky-rainbow.png |
-| ---------------------------- |
-| -w=660 -h=1020 -ff=julia -c=-0.22 -c=0.65 -z=8 -i=800 -ss=4 -cf=wackyrainbow |
-| ![wacky-rainbow.png](./samples/wacky-rainbow.png) |
+### A stepped RGB colouring function
+```
+-w=660 -h=1020 -ff=julia -c=-0.22 -c=0.65 -z=8 -i=800 -ss=4 -cf=wackyrainbow
+```
+<p align="center">
+	<img src="./samples/wacky-rainbow.png" width="70%">
+</p>
+
+### A stepped grayscale colouring function
+```
+-w=2600 -h=2000 -ff=julia -c=-0.2 -c=0.65 -z=5 -i=512 -ss=2 -cf=wackygrayscale
+```
+<p align="center">
+	<img src="./samples/julia2.png" width="70%">
+</p>
+
+### A smooth grayscale colouring function
+```
+-w=2600 -h=2000 -ff=mandelbrot -x=-0.82 -y=-0.1905 -z=50 -i=512 -ss=2 -cf=smoothgrayscale
+```
+<p align="center">
+	<img src="./samples/mandelbrot2.png" width="70%">
+</p>
+
+### Another smooth grayscale colouring function
+```
+-w=2600 -h=2000 -ff=julia -c=-1 -c=-0.25 -z=1.5 -i=512 -ss=2 -cf=zgrayscale
+```
+<p align="center">
+	<img src="./samples/julia3.png" width="70%">
+</p>
