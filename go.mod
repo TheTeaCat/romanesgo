@@ -1,3 +1,3 @@
-module github.com/karlkeefer/romanesgo
+module github.com/theteacat/romanesgo
 
 go 1.14
