@@ -1,7 +1,6 @@
 # Romanesgo
 
-A simple fractal exploration program I wrote when I was 17/18.
-Named after the "cooler" version of broccoli.
+A simple fractal exploration program, named after the "cooler" version of broccoli.
 
 
 
