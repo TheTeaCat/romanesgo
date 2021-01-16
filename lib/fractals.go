@@ -21,6 +21,7 @@ type Fractal struct {
 	Description        string
 	Constants          int
 	ColorSchemes       []string
+	DefaultColorScheme string
 	Fn                 fractalFunc
 }
 
@@ -43,6 +44,12 @@ func GetPointFunc(fractalName, colorName string, constants []float64) (PointFunc
 		return nil, errors.New("invalid number of constants")
 	}
 
+	/* if colorName is the empty string, or "default", then we use the default
+	   coloring function of the fractal.
+	*/
+	if colorName == "" || strings.ToLower(colorName) == "default" {
+		colorName = frac.DefaultColorScheme
+	}
 	// check colorName is valid for this fractal
 	colorValid := false
 	for _, cn := range frac.ColorSchemes {
@@ -54,7 +61,6 @@ func GetPointFunc(fractalName, colorName string, constants []float64) (PointFunc
 	if !colorValid {
 		return nil, ErrInvalidColor
 	}
-
 	/* Get color function from colorSchemes:
 	   Could still fail if a colorscheme is named in the fractal object that
 	   does not exist in the colorSchemes map.
@@ -81,9 +87,10 @@ func GetFractal(fractalName string) (*Fractal, error) {
 // Fractals is an array of the available fractals in this program
 var Fractals = map[string]*Fractal{
 	"mandelbrot": &Fractal{
-		Description:  "Classic mandelbrot function.",
-		Constants:    0,
-		ColorSchemes: []string{"simpleGrayscale", "wackyGrayscale", "wackyRainbow", "zGrayscale", "smoothGrayscale", "smoothColor", "smoothColor2"},
+		Description:        "Classic mandelbrot function.",
+		Constants:          0,
+		ColorSchemes:       []string{"simpleGrayscale", "wackyGrayscale", "wackyRainbow", "zGrayscale", "smoothGrayscale", "smoothColor", "smoothColor2"},
+		DefaultColorScheme: "simpleGrayscale",
 		Fn: func(color colorFunc, constants []float64) PointFunc {
 			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
 				c := complex{xCoord, yCoord}
@@ -100,9 +107,10 @@ var Fractals = map[string]*Fractal{
 	},
 
 	"julia": &Fractal{
-		Description:  "Classic Julia function.\nThe two constants are the real and imaginary components of C.",
-		Constants:    2,
-		ColorSchemes: []string{"simpleGrayscale", "wackyGrayscale", "wackyRainbow", "zGrayscale", "smoothGrayscale", "smoothColor", "smoothColor2"},
+		Description:        "Classic Julia function.\nThe two constants are the real and imaginary components of C.",
+		Constants:          2,
+		ColorSchemes:       []string{"simpleGrayscale", "wackyGrayscale", "wackyRainbow", "zGrayscale", "smoothGrayscale", "smoothColor", "smoothColor2"},
+		DefaultColorScheme: "simpleGrayscale",
 		Fn: func(color colorFunc, constants []float64) PointFunc {
 			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
 				c := complex{constants[0], constants[1]}
@@ -119,9 +127,10 @@ var Fractals = map[string]*Fractal{
 	},
 
 	"burningship": &Fractal{
-		Description:  "Classic burning ship function.",
-		Constants:    0,
-		ColorSchemes: []string{"simpleGrayscale", "wackyGrayscale"},
+		Description:        "Classic burning ship function.",
+		Constants:          0,
+		ColorSchemes:       []string{"simpleGrayscale", "wackyGrayscale"},
+		DefaultColorScheme: "simpleGrayscale",
 		Fn: func(color colorFunc, constants []float64) PointFunc {
 			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
 				z := complex{0, 0}
@@ -139,9 +148,10 @@ var Fractals = map[string]*Fractal{
 	},
 
 	"collatz": &Fractal{
-		Description:  "The Collatz fractal.\nThe constant value is the absolute value after which the sequence will be assumed to have escaped.",
-		Constants:    0,
-		ColorSchemes: []string{"simpleGrayscale", "wackyGrayscale", "wackyRainbow"},
+		Description:        "The Collatz fractal.\nThe constant value is the absolute value after which the sequence will be assumed to have escaped.",
+		Constants:          0,
+		ColorSchemes:       []string{"simpleGrayscale", "wackyGrayscale", "wackyRainbow"},
+		DefaultColorScheme: "simpleGrayscale",
 		Fn: func(color colorFunc, constants []float64) PointFunc {
 			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
 				z := complex{xCoord, yCoord}
