@@ -67,8 +67,8 @@ func handleHelp(args []string) {
 	if len(args) == 1 {
 		fmt.Print(`Do "romanesgo help {Fractal Name}" for further info on a particular fractal function.`)
 		fmt.Println("Fractals:")
-		for _, f := range lib.Fractals {
-			fmt.Println("\t", f.Name)
+		for fname := range lib.Fractals {
+			fmt.Println("\t", fname)
 		}
 
 		fmt.Println("\nFlags:")
