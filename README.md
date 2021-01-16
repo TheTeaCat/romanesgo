@@ -21,7 +21,7 @@ Flags:
   -c value
         constants
   -cf string
-        colouring function (default "default")
+        coloring function (default "default")
   -ff string
         fractal (default "none")
   -fn string
@@ -56,7 +56,7 @@ $ ./romanesgo -ff=burningship -x=-1.748 -y=0.035 -z=20 -ss=4 -w=25000 -h=25000 -
 	Fractal (ff):		 burningship 
 	Constants (c):		  
 	Max Iterations (i):	 128 
-	Colouring function (cf): default 
+	Coloring function (cf): default 
 	Centre x Coord (x):	 -1.748 
 	Centre y Coord (y):	 0.035 
 	Zoom factor (z):	 20 
@@ -85,23 +85,23 @@ Oh, and that's with supersampling set to 4, so it's making 16 samples per pixel,
 | mandelbrot.png                                               | julia.png                                                    |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | -w=2600 -h=2000 -ff=mandelbrot -x=-0.65 -z=0.8 -i=1024 -ss=2 | -w=2600 -h=2000 -ff=julia -c=-0.2 -c=0.65 -z=0.9 -i=512 -ss=2 |
-| ![mandelbrot.png](./example%20images/mandelbrot.png)         | ![julia.png](./example%20images/julia.png)                   |
+| ![mandelbrot.png](./samples/mandelbrot.png)         | ![julia.png](./samples/julia.png)                   |
 
 | burningship.png                                              | julia4.png                                                   |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| -w=2000 -h=2600 -ff=burningship -x=-1.749 -y=0.037 -z=20 -i=256 -ss=2 | -w=2000 -h=2600 -ff=julia -c=0.1 -c=0.7 -z=0.75 -ss=2 -cf=smoothcolour |
-| ![burningship.png](./example%20images/burningship.png)       | ![julia4.png](./example%20images/julia4.png)                 |
+| -w=2000 -h=2600 -ff=burningship -x=-1.749 -y=0.037 -z=20 -i=256 -ss=2 | -w=2000 -h=2600 -ff=julia -c=0.1 -c=0.7 -z=0.75 -ss=2 -cf=smoothcolor |
+| ![burningship.png](./samples/burningship.png)       | ![julia4.png](./samples/julia4.png)                 |
 
 
 | mandelbrot2.png                                              | julia2.png                                                   |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| -w=2600 -h=2000 -ff=mandelbrot -x=-0.82 -y=-0.1905 -z=50 -i=512 -ss=2 -cf=smoothgreyscale | -w=2600 -h=2000 -ff=julia -c=-0.2 -c=0.65 -z=5 -i=512 -ss=2 -cf=whackygreyscale |
-| ![mandelbrot2.png](./example%20images/mandelbrot2.png)       | ![julia2.png](./example%20images/julia2.png)                 |
+| -w=2600 -h=2000 -ff=mandelbrot -x=-0.82 -y=-0.1905 -z=50 -i=512 -ss=2 -cf=smoothgrayscale | -w=2600 -h=2000 -ff=julia -c=-0.2 -c=0.65 -z=5 -i=512 -ss=2 -cf=wackygrayscale |
+| ![mandelbrot2.png](./samples/mandelbrot2.png)       | ![julia2.png](./samples/julia2.png)                 |
 
-| julia3.png                                                   |
-| ------------------------------------------------------------ |
-| -w=2600 -h=2000 -ff=julia -c=-1 -c=-0.25 -z=1.5 -i=512 -ss=2 -cf=zgreyscale |
-| ![julia3.png](./example%20images/julia3.png)                 |
+| julia3.png                                                   | wacky-rainbow.png
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| -w=2600 -h=2000 -ff=julia -c=-1 -c=-0.25 -z=1.5 -i=512 -ss=2 -cf=zgrayscale | -w=660 -h=1020 -ff=julia -c=-0.22 -c=0.65 -z=8 -i=800 -ss=4 -cf=wackyrainbow |
+| ![julia3.png](./samples/julia3.png)                 | ![wacky-rainbow.png](./samples/wacky-rainbow.png)|
 
 
 
