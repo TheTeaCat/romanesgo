@@ -145,4 +145,26 @@ var Fractals = []Fractal{
 			}
 		},
 	},
+
+	Fractal{
+		Name:         "collatz",
+		Description:  "The Collatz fractal.\nThe constant value is the absolute value after which the sequence will be assumed to have escaped.",
+		Constants:    0,
+		ColorSchemes: defaultColors,
+		Fn: func(color colorFunc, constants []float64) PointFunc {
+			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
+				z := complex{xCoord, yCoord}
+				iterations := 0
+
+				for iterations = 0; z.abs() < math.MaxFloat64 && iterations < iterationCap; iterations++ {
+					cossq := z.mul(complex{math.Pi / 2, 0}).cos().sq()
+					sinsq := z.mul(complex{math.Pi / 2, 0}).sin().sq()
+					z = cossq.mul(z.mul(complex{0.5, 0})).add(
+						sinsq.mul(z.mul(complex{3.0, 0}).add(complex{1.0, 0})))
+				}
+
+				return color(iterations, iterationCap, z, complex{0, 0})
+			}
+		},
+	},
 }
