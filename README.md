@@ -128,7 +128,7 @@ Oh, and that's with supersampling set to 4, so it's making 16 samples per pixel,
 </p>
 
 ### A multicorn animation
-See [samples/multicorn/multicorn-animation.sh](https://github.com/TheTeaCat/romanesgo/blob/dev/samples/multicorn/multicorn-animation.sh)
+See [samples/multicorn/multicorn-animation.sh](/samples/multicorn/multicorn-animation.sh)
 ```
 for i in $(seq 1 0.04 5)
 do
