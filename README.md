@@ -141,7 +141,7 @@ done
 
 ### A multibrot set
 ```
--ff=multibrot -c=4 -w=2600 -h=2000 -z=0.7 -x=-0.2
+-ff=multibrot -c=4 -w=2600 -h=2000 -z=0.7 -x=-0.2 -ss=2
 ```
 <p align="center">
 	<img src="./samples/multibrot.png" width="70%">
@@ -149,7 +149,7 @@ done
 
 ### A multijulia set
 ```
--ff=multijulia -c=0.2 -c=0.9 -c=3 -z=0.8 -y=-0.15 -i=256
+-ff=multijulia -c=0.2 -c=0.9 -c=3 -z=0.8 -y=-0.15 -i=256 -ss=2
 ```
 <p align="center">
 	<img src="./samples/multijulia.png" width="70%">
