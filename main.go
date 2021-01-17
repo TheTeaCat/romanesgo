@@ -30,7 +30,7 @@ func main() {
 
 	args := flag.Args()
 
-	if len(args) == 0 || args[0] == "help" {
+	if *fractalName == "none" || len(args) > 0 && args[0] == "help" {
 		handleHelp(args)
 	} else {
 		pointFunc, err := lib.GetPointFunc(*fractalName, *colorName, constants)
