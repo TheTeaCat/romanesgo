@@ -134,7 +134,7 @@ Oh, and that's with supersampling set to 4, so it's making 16 samples per pixel,
 
 ### A stepped RGB colouring function
 ```
--w=660 -h=1020 -ff=julia -c=-0.22 -c=0.65 -z=8 -i=800 -ss=4 -cf=wackyrainbow
+-w=2000 -h=2600 -ff=julia -c=-0.22 -c=0.65 -z=8 -i=800 -ss=4 -cf=wackyRainbow
 ```
 <p align="center">
 	<img src="./samples/wacky-rainbow.png" width="70%">
