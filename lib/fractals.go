@@ -44,6 +44,8 @@ func GetPointFunc(fractalName, colorName string, constants []float64) (PointFunc
 		return nil, errors.New("invalid number of constants")
 	}
 
+	// colorNames should always be lowercased
+	colorName = strings.ToLower(colorName)
 	/* if colorName is the empty string, or "default", then we use the default
 	   coloring function of the fractal.
 	*/
@@ -53,7 +55,7 @@ func GetPointFunc(fractalName, colorName string, constants []float64) (PointFunc
 	// check colorName is valid for this fractal
 	colorValid := false
 	for _, cn := range frac.ColorSchemes {
-		if cn == strings.ToLower(colorName) {
+		if cn == colorName {
 			colorValid = true
 			break
 		}
