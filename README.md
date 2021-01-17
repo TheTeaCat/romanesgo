@@ -194,3 +194,11 @@ done
 <p align="center">
 	<img src="./samples/julia3.png" width="70%">
 </p>
+
+### The Burning Ship Lady
+```
+-ff=burningship -z=100 -y=1.015 -cf=wackygrayscale -ss=8 -w=2000 -h=2000
+```
+<p align="center">
+	<img src="./samples/burningshiplady.png" width="70%">
+</p>
