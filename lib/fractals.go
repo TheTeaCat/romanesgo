@@ -193,7 +193,7 @@ var Fractals = map[string]*Fractal{
 	},
 
 	"multicorn": &Fractal{
-		Description:        "Classic tricorn function. Constant is the power to which the conjugate of z is raised.",
+		Description:        "Classic multicorn function. Constant is the power to which the conjugate of z is raised.",
 		Constants:          1,
 		ColorSchemes:       []string{"simplegrayscale", "wackygrayscale", "wackyrainbow", "zgrayscale"},
 		DefaultColorScheme: "simplegrayscale",
@@ -234,7 +234,7 @@ var Fractals = map[string]*Fractal{
 	},
 
 	"multijulia": &Fractal{
-		Description:        "Classic Julia function.\nThe first two constants are the real and imaginary components of C, the third constant is the power to which z is raised.",
+		Description:        "Classic multijulia function.\nThe first two constants are the real and imaginary components of C, the third constant is the power to which z is raised.",
 		Constants:          3,
 		ColorSchemes:       []string{"simplegrayscale", "wackygrayscale", "wackyrainbow", "zgrayscale"},
 		DefaultColorScheme: "simplegrayscale",
