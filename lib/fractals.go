@@ -53,7 +53,7 @@ func GetPointFunc(fractalName, colorName string, constants []float64) (PointFunc
 	// check colorName is valid for this fractal
 	colorValid := false
 	for _, cn := range frac.ColorSchemes {
-		if strings.ToLower(cn) == strings.ToLower(colorName) {
+		if cn == strings.ToLower(colorName) {
 			colorValid = true
 			break
 		}
@@ -75,7 +75,7 @@ func GetPointFunc(fractalName, colorName string, constants []float64) (PointFunc
 
 // GetFractal returns a fractal if the name is valid
 func GetFractal(fractalName string) (*Fractal, error) {
-	frac, validFractal := Fractals[fractalName]
+	frac, validFractal := Fractals[strings.ToLower(fractalName)]
 
 	if !validFractal {
 		return nil, ErrInvalidFractal
@@ -89,8 +89,8 @@ var Fractals = map[string]*Fractal{
 	"mandelbrot": &Fractal{
 		Description:        "Classic mandelbrot function.",
 		Constants:          0,
-		ColorSchemes:       []string{"simpleGrayscale", "wackyGrayscale", "wackyRainbow", "zGrayscale", "smoothGrayscale", "smoothColor", "smoothColor2"},
-		DefaultColorScheme: "simpleGrayscale",
+		ColorSchemes:       []string{"simplegrayscale", "wackygrayscale", "wackyrainbow", "zgrayscale", "smoothgrayscale", "smoothcolor", "smoothcolor2"},
+		DefaultColorScheme: "simplegrayscale",
 		Fn: func(color colorFunc, constants []float64) PointFunc {
 			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
 				c := complex{xCoord, yCoord}
@@ -109,8 +109,8 @@ var Fractals = map[string]*Fractal{
 	"julia": &Fractal{
 		Description:        "Classic Julia function.\nThe two constants are the real and imaginary components of C.",
 		Constants:          2,
-		ColorSchemes:       []string{"simpleGrayscale", "wackyGrayscale", "wackyRainbow", "zGrayscale", "smoothGrayscale", "smoothColor", "smoothColor2"},
-		DefaultColorScheme: "simpleGrayscale",
+		ColorSchemes:       []string{"simplegrayscale", "wackygrayscale", "wackyrainbow", "zgrayscale", "smoothgrayscale", "smoothcolor", "smoothcolor2"},
+		DefaultColorScheme: "simplegrayscale",
 		Fn: func(color colorFunc, constants []float64) PointFunc {
 			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
 				c := complex{constants[0], constants[1]}
@@ -129,8 +129,8 @@ var Fractals = map[string]*Fractal{
 	"burningship": &Fractal{
 		Description:        "Classic burning ship function.",
 		Constants:          0,
-		ColorSchemes:       []string{"simpleGrayscale", "wackyGrayscale"},
-		DefaultColorScheme: "simpleGrayscale",
+		ColorSchemes:       []string{"simplegrayscale", "wackygrayscale"},
+		DefaultColorScheme: "simplegrayscale",
 		Fn: func(color colorFunc, constants []float64) PointFunc {
 			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
 				z := complex{0, 0}
@@ -150,8 +150,8 @@ var Fractals = map[string]*Fractal{
 	"collatz": &Fractal{
 		Description:        "The Collatz fractal.\nThe constant value is the absolute value after which the sequence will be assumed to have escaped.",
 		Constants:          0,
-		ColorSchemes:       []string{"simpleGrayscale", "wackyGrayscale", "wackyRainbow"},
-		DefaultColorScheme: "simpleGrayscale",
+		ColorSchemes:       []string{"simplegrayscale", "wackygrayscale", "wackyrainbow"},
+		DefaultColorScheme: "simplegrayscale",
 		Fn: func(color colorFunc, constants []float64) PointFunc {
 			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
 				z := complex{xCoord, yCoord}
@@ -172,8 +172,8 @@ var Fractals = map[string]*Fractal{
 	"tricorn": &Fractal{
 		Description:        "Classic tricorn function.",
 		Constants:          0,
-		ColorSchemes:       []string{"simpleGrayscale", "wackyGrayscale", "wackyRainbow", "zGrayscale"},
-		DefaultColorScheme: "simpleGrayscale",
+		ColorSchemes:       []string{"simplegrayscale", "wackygrayscale", "wackyrainbow", "zgrayscale"},
+		DefaultColorScheme: "simplegrayscale",
 		Fn: func(color colorFunc, constants []float64) PointFunc {
 			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
 				c := complex{xCoord, yCoord}

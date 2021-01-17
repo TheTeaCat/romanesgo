@@ -17,15 +17,15 @@ func wacky(colors []color.RGBA) colorFunc {
 }
 
 var colorSchemes = map[string]colorFunc{
-	"simpleGrayscale": func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
+	"simplegrayscale": func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
 		col := float64(255*iterations) / float64(iterationCap)
 		return col, col, col, 255
 	},
-	"zGrayscale": func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
+	"zgrayscale": func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
 		col := 255.0 * (math.Mod(z.abs(), 2.0) / 2.0)
 		return col, col, col, 255
 	},
-	"smoothGrayscale": func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
+	"smoothgrayscale": func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
 		z = z.mul(z).add(c)
 		iterations++
 		z = z.mul(z).add(c)
@@ -45,7 +45,7 @@ var colorSchemes = map[string]colorFunc{
 		return col, col, col, 255
 
 	},
-	"smoothColor": func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
+	"smoothcolor": func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
 		z = z.mul(z).add(c)
 		iterations++
 		z = z.mul(z).add(c)
@@ -69,7 +69,7 @@ var colorSchemes = map[string]colorFunc{
 		}
 		return 0, 0, 0, 255
 	},
-	"smoothColor2": func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
+	"smoothcolor2": func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
 		z = z.mul(z).add(c)
 		iterations++
 		z = z.mul(z).add(c)
@@ -93,7 +93,7 @@ var colorSchemes = map[string]colorFunc{
 		}
 		return 0, 0, 0, 255
 	},
-	"wackyRainbow": wacky([]color.RGBA{
+	"wackyrainbow": wacky([]color.RGBA{
 		color.RGBA{84, 110, 98, 255},   // grey-green
 		color.RGBA{79, 127, 135, 255},  // turq
 		color.RGBA{110, 93, 158, 255},  // purp
@@ -103,7 +103,7 @@ var colorSchemes = map[string]colorFunc{
 		color.RGBA{231, 236, 128, 255}, // pale yellow
 		color.RGBA{135, 175, 95, 255},  // neon green
 	}),
-	"wackyGrayscale": wacky([]color.RGBA{
+	"wackygrayscale": wacky([]color.RGBA{
 		color.RGBA{0, 0, 0, 255},
 		color.RGBA{255, 255, 255, 255},
 	}),
