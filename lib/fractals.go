@@ -119,7 +119,7 @@ var Fractals = map[string]*Fractal{
 				z := complex{xCoord, yCoord}
 				iterations := 0
 
-				for iterations = 0; z.mul(z).add(c).abs() <= 2 && iterations < iterationCap; iterations++ {
+				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
 					z = z.mul(z).add(c)
 				}
 
@@ -185,6 +185,67 @@ var Fractals = map[string]*Fractal{
 				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
 					z = z.conj()
 					z = z.mul(z).add(c)
+				}
+
+				return color(iterations, iterationCap, z, c)
+			}
+		},
+	},
+
+	"multicorn": &Fractal{
+		Description:        "Classic multicorn function. Constant is the power to which the conjugate of z is raised.",
+		Constants:          1,
+		ColorSchemes:       []string{"simplegrayscale", "wackygrayscale", "wackyrainbow", "zgrayscale"},
+		DefaultColorScheme: "simplegrayscale",
+		Fn: func(color colorFunc, constants []float64) PointFunc {
+			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
+				c := complex{xCoord, yCoord}
+				z := complex{0.0, 0.0}
+				iterations := 0
+
+				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
+					z = z.conj()
+					z = z.pow(constants[0]).add(c)
+				}
+
+				return color(iterations, iterationCap, z, c)
+			}
+		},
+	},
+
+	"multibrot": &Fractal{
+		Description:        "Classic multibrot function.\nConstant is the power to which z is raised.",
+		Constants:          1,
+		ColorSchemes:       []string{"simplegrayscale", "wackygrayscale", "wackyrainbow", "zgrayscale"},
+		DefaultColorScheme: "simplegrayscale",
+		Fn: func(color colorFunc, constants []float64) PointFunc {
+			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
+				c := complex{xCoord, yCoord}
+				z := complex{0.0, 0.0}
+				iterations := 0
+
+				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
+					z = z.pow(constants[0]).add(c)
+				}
+
+				return color(iterations, iterationCap, z, c)
+			}
+		},
+	},
+
+	"multijulia": &Fractal{
+		Description:        "Classic multijulia function.\nThe first two constants are the real and imaginary components of C, the third constant is the power to which z is raised.",
+		Constants:          3,
+		ColorSchemes:       []string{"simplegrayscale", "wackygrayscale", "wackyrainbow", "zgrayscale"},
+		DefaultColorScheme: "simplegrayscale",
+		Fn: func(color colorFunc, constants []float64) PointFunc {
+			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
+				c := complex{constants[0], constants[1]}
+				z := complex{xCoord, yCoord}
+				iterations := 0
+
+				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
+					z = z.pow(constants[2]).add(c)
 				}
 
 				return color(iterations, iterationCap, z, c)

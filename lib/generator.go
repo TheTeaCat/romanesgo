@@ -70,16 +70,16 @@ func (f Generator) pixToCoord(xPix, yPix float64) (xCoord, yCoord float64) {
 }
 
 func (f Generator) genRoutine(wg *sync.WaitGroup, rno int) {
-	offsets := make([]float64, f.samples)
 
+	// Keeping as many recalculated values outside of the for loops as possible.
+	offsets := make([]float64, f.samples)
 	for sample := 0; sample < f.samples; sample++ {
 		offsets[sample] = (1 + float64(2*sample) - float64(f.samples)) / float64(2*(f.samples))
 	}
-	// Keeping as many recalculated values outside of the for loops as possible.
 	samplesSquared := float64(f.samples * f.samples)
-
 	routines := f.routines
 	size := f.width * f.height
+
 	for i := rno; i < size; i = i + routines {
 		xPix := i % f.width
 		yPix := i / f.width
@@ -92,13 +92,16 @@ func (f Generator) genRoutine(wg *sync.WaitGroup, rno int) {
 
 				r, g, b, a := f.fn(xCoord, yCoord, f.iterationCap)
 
-				R, G, B, A = R+(r/samplesSquared),
-					G+(g/samplesSquared),
-					B+(b/samplesSquared),
-					A+(a/samplesSquared)
+				R, G, B, A = R+r, G+g, B+b, A+a
 			}
 		}
-		f.Img.Set(xPix, yPix, color.RGBA{uint8(R), uint8(G), uint8(B), uint8(A)})
+
+		f.Img.Set(xPix, yPix,
+			color.RGBA{
+				uint8(R / samplesSquared),
+				uint8(G / samplesSquared),
+				uint8(B / samplesSquared),
+				uint8(A / samplesSquared)})
 	}
 
 	wg.Done()

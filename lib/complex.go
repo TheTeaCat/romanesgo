@@ -37,9 +37,17 @@ func (c complex) mul(d complex) (e complex) {
 	return e
 }
 
-//Lazy/shorthand helper.
+//Lazy/shorthand helper. This is faster than pow(2).
 func (c complex) sq() complex {
 	return c.mul(c)
+}
+
+func (c complex) pow(n float64) (e complex) {
+	rN := math.Pow(c.real*c.real+c.imag*c.imag, n/2)
+	nTheta := n * math.Atan2(c.imag, c.real)
+	e.real = rN * math.Cos(nTheta)
+	e.imag = rN * math.Sin(nTheta)
+	return e
 }
 
 func (c complex) sin() (e complex) {
