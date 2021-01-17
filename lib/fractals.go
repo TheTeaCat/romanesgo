@@ -168,4 +168,25 @@ var Fractals = map[string]*Fractal{
 			}
 		},
 	},
+
+	"tricorn": &Fractal{
+		Description:        "Classic tricorn function.",
+		Constants:          0,
+		ColorSchemes:       []string{"simpleGrayscale", "wackyGrayscale", "wackyRainbow", "zGrayscale"},
+		DefaultColorScheme: "simpleGrayscale",
+		Fn: func(color colorFunc, constants []float64) PointFunc {
+			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
+				c := complex{xCoord, yCoord}
+				z := complex{0.0, 0.0}
+				iterations := 0
+
+				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
+					z = z.conj()
+					z = z.mul(z).add(c)
+				}
+
+				return color(iterations, iterationCap, z, c)
+			}
+		},
+	},
 }

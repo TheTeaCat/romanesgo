@@ -59,3 +59,9 @@ func (c complex) exp() (e complex) {
 	e.imag = math.Exp(c.real) * math.Sin(c.imag)
 	return e
 }
+
+func (c complex) conj() (e complex) {
+	e.real = c.real
+	e.imag = -c.imag
+	return e
+}
