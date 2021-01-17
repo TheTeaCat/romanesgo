@@ -8,6 +8,9 @@ Supported Fractals:
  - [Julia sets](#a-julia-set)
  - [The Burning Ship fractal](#the-burning-ship-fractal)
  - [The Collatz fractal](#the-collatz-fractal)
+ - [Multicorn sets](#a-multicorn-animation)
+ - [Multibrot sets](#a-multibrot-set)
+ - [Multijulia sets](#a-multijulia-set)
 
 ## Contents
 
@@ -122,6 +125,34 @@ Oh, and that's with supersampling set to 4, so it's making 16 samples per pixel,
 ```
 <p align="center">
 	<img src="./samples/collatz.png" width="70%">
+</p>
+
+### A multicorn animation
+See [samples/multicorn/multicorn-animation.sh](https://github.com/TheTeaCat/romanesgo/blob/dev/samples/multicorn/multicorn-animation.sh)
+```
+for i in $(seq 1 0.04 5)
+do
+    ./romanesgo -ff=multicorn -i=256 -z=0.5 -ss=4 -w=400 -h=400 -c=$i -fn="samples/multicorn/frames/${i}.png"
+done
+```
+<p align="center">
+	<img src="./samples/multicorn/multicorn.gif" width="400px">
+</p>
+
+### A multibrot set
+```
+-ff=multibrot -c=4 -w=2600 -h=2000 -z=0.7 -x=-0.2
+```
+<p align="center">
+	<img src="./samples/multibrot.png" width="70%">
+</p>
+
+### A multijulia set
+```
+-ff=multijulia -c=0.2 -c=0.9 -c=3 -z=0.8 -y=-0.15 -i=256
+```
+<p align="center">
+	<img src="./samples/multijulia.png" width="70%">
 </p>
 
 ### A smoothed RGB colouring function
