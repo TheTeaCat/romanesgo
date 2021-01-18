@@ -184,6 +184,73 @@ var Fractals = map[string]*Fractal{
 		},
 	},
 
+	"birdofprey": &Fractal{
+		Description:        "Classic burning ship function, with z raised to the power of 3 in lieu of 2.\nProduces a fractal likened to Klingon birds of prey from Star Trek.",
+		Constants:          0,
+		ColorSchemes:       []string{"simplegrayscale", "zgrayscale", "smoothgrayscale", "smoothcolor", "smoothcolor2", "wackyrainbow", "wackygrayscale"},
+		DefaultColorScheme: "simplegrayscale",
+		Fn: func(color colorFunc, constants []float64) PointFunc {
+			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
+				z := complex{0, 0}
+				c := complex{xCoord, yCoord}
+				iterations := 0
+
+				iterate := func(z complex) (r complex) {
+					r.real = math.Abs(z.real)
+					r.imag = math.Abs(z.imag)
+					r = r.mul(r).mul(r).add(c)
+					return r
+				}
+
+				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
+					z = iterate(z)
+				}
+
+				return color(
+					iterations,
+					iterationCap,
+					map[string]interface{}{
+						"z":        z,
+						"iterator": iterate,
+					},
+				)
+			}
+		},
+	},
+
+	"multiburningship": &Fractal{
+		Description:        "Classic burning ship function, with z raised to the power of a constant in lieu of 2.",
+		Constants:          1,
+		ColorSchemes:       []string{"simplegrayscale", "zgrayscale", "wackyrainbow", "wackygrayscale"},
+		DefaultColorScheme: "simplegrayscale",
+		Fn: func(color colorFunc, constants []float64) PointFunc {
+			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
+				z := complex{0, 0}
+				c := complex{xCoord, yCoord}
+				iterations := 0
+
+				iterate := func(z complex) (r complex) {
+					r.real = math.Abs(z.real)
+					r.imag = math.Abs(z.imag)
+					r = r.pow(constants[0]).add(c)
+					return r
+				}
+
+				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
+					z = iterate(z)
+				}
+
+				return color(
+					iterations,
+					iterationCap,
+					map[string]interface{}{
+						"z": z,
+					},
+				)
+			}
+		},
+	},
+
 	"collatz": &Fractal{
 		Description:        "The Collatz fractal.\nThe constant value is the absolute value after which the sequence will be assumed to have escaped.",
 		Constants:          0,
