@@ -5,34 +5,33 @@ import (
 	"math"
 )
 
-type colorFunc func(iterations, iterationCap int, z, c complex) (R, G, B, A float64)
-
-// returns a color func that cycles through the set of colors passed in
-func wacky(colors []color.RGBA) colorFunc {
-	return func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
-		key := iterations % len(colors)
-		color := colors[key]
-		return float64(color.R), float64(color.G), float64(color.B), float64(color.A)
-	}
-}
+/* The relationship between fractals and colorFuncs is many to many, so the use
+   of a map[string]interface{} kwargs here is justifiable.
+*/
+type colorFunc func(iterations, iterationCap int, kwargs map[string]interface{}) (R, G, B, A float64)
 
 var colorSchemes = map[string]colorFunc{
-	"simplegrayscale": func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
+	"simplegrayscale": func(iterations, iterationCap int, kwargs map[string]interface{}) (R, G, B, A float64) {
 		col := float64(255*iterations) / float64(iterationCap)
 		return col, col, col, 255
 	},
-	"zgrayscale": func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
+	"zgrayscale": func(iterations, iterationCap int, kwargs map[string]interface{}) (R, G, B, A float64) {
+		z := kwargs["z"].(complex)
 		col := 255.0 * (math.Mod(z.abs(), 2.0) / 2.0)
 		return col, col, col, 255
 	},
-	"smoothgrayscale": func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
-		z = z.mul(z).add(c)
-		iterations++
-		z = z.mul(z).add(c)
-		iterations++
+
+	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	// !!! Smooth coloring functions only work for some fractals where z is raised to a power of 2 !!!
+	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	"smoothgrayscale": func(iterations, iterationCap int, kwargs map[string]interface{}) (R, G, B, A float64) {
+		z := kwargs["z"].(complex)
+		iterator := kwargs["iterator"].(func(complex) complex)
+
+		z = iterator(iterator(z))
+		iterations += 2
 
 		i := float64(iterations)
-
 		if iterations < iterationCap {
 			i = i - (math.Log(math.Log(z.abs())) / math.Log(2))
 		}
@@ -45,14 +44,14 @@ var colorSchemes = map[string]colorFunc{
 		return col, col, col, 255
 
 	},
-	"smoothcolor": func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
-		z = z.mul(z).add(c)
-		iterations++
-		z = z.mul(z).add(c)
-		iterations++
+	"smoothcolor": func(iterations, iterationCap int, kwargs map[string]interface{}) (R, G, B, A float64) {
+		z := kwargs["z"].(complex)
+		iterator := kwargs["iterator"].(func(complex) complex)
+
+		z = iterator(iterator(z))
+		iterations += 2
 
 		i := float64(iterations)
-
 		if iterations < iterationCap {
 			i = i - (math.Log(math.Log(z.abs())) / math.Log(2))
 		}
@@ -69,14 +68,14 @@ var colorSchemes = map[string]colorFunc{
 		}
 		return 0, 0, 0, 255
 	},
-	"smoothcolor2": func(iterations, iterationCap int, z, c complex) (R, G, B, A float64) {
-		z = z.mul(z).add(c)
-		iterations++
-		z = z.mul(z).add(c)
-		iterations++
+	"smoothcolor2": func(iterations, iterationCap int, kwargs map[string]interface{}) (R, G, B, A float64) {
+		z := kwargs["z"].(complex)
+		iterator := kwargs["iterator"].(func(complex) complex)
+
+		z = iterator(iterator(z))
+		iterations += 2
 
 		i := float64(iterations)
-
 		if iterations < iterationCap {
 			i = i - (math.Log(math.Log(z.abs())) / math.Log(2))
 		}
@@ -93,6 +92,8 @@ var colorSchemes = map[string]colorFunc{
 		}
 		return 0, 0, 0, 255
 	},
+
+	// 'wacky' coloring functions simply iterate over a set of colors.
 	"wackyrainbow": wacky([]color.RGBA{
 		color.RGBA{84, 110, 98, 255},   // grey-green
 		color.RGBA{79, 127, 135, 255},  // turq
@@ -107,4 +108,13 @@ var colorSchemes = map[string]colorFunc{
 		color.RGBA{0, 0, 0, 255},
 		color.RGBA{255, 255, 255, 255},
 	}),
+}
+
+// returns a color func that cycles through the set of colors passed in
+func wacky(colors []color.RGBA) colorFunc {
+	return func(iterations, iterationCap int, kwargs map[string]interface{}) (R, G, B, A float64) {
+		key := iterations % len(colors)
+		color := colors[key]
+		return float64(color.R), float64(color.G), float64(color.B), float64(color.A)
+	}
 }

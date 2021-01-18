@@ -33,7 +33,6 @@ func (f Fractal) String() string {
 // GetPointFunc will check for valid fractalname and colorname
 // returns a pointFunc if we're good to go
 func GetPointFunc(fractalName, colorName string, constants []float64) (PointFunc, error) {
-
 	frac, err := GetFractal(fractalName)
 	if err != nil {
 		return nil, err
@@ -86,12 +85,13 @@ func GetFractal(fractalName string) (*Fractal, error) {
 	return frac, nil
 }
 
-// Fractals is an array of the available fractals in this program
+// Fractals is a map of the available fractals in this program
 var Fractals = map[string]*Fractal{
+	// Mandelbrot based fractals
 	"mandelbrot": &Fractal{
 		Description:        "Classic mandelbrot function.",
 		Constants:          0,
-		ColorSchemes:       []string{"simplegrayscale", "wackygrayscale", "wackyrainbow", "zgrayscale", "smoothgrayscale", "smoothcolor", "smoothcolor2"},
+		ColorSchemes:       []string{"simplegrayscale", "zgrayscale", "smoothgrayscale", "smoothcolor", "smoothcolor2", "wackyrainbow", "wackygrayscale"},
 		DefaultColorScheme: "simplegrayscale",
 		Fn: func(color colorFunc, constants []float64) PointFunc {
 			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
@@ -99,116 +99,22 @@ var Fractals = map[string]*Fractal{
 				z := complex{0.0, 0.0}
 				iterations := 0
 
-				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
-					z = z.mul(z).add(c)
+				iterate := func(z complex) complex {
+					return z.mul(z).add(c)
 				}
-
-				return color(iterations, iterationCap, z, c)
-			}
-		},
-	},
-
-	"julia": &Fractal{
-		Description:        "Classic Julia function.\nThe two constants are the real and imaginary components of C.",
-		Constants:          2,
-		ColorSchemes:       []string{"simplegrayscale", "wackygrayscale", "wackyrainbow", "zgrayscale", "smoothgrayscale", "smoothcolor", "smoothcolor2"},
-		DefaultColorScheme: "simplegrayscale",
-		Fn: func(color colorFunc, constants []float64) PointFunc {
-			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
-				c := complex{constants[0], constants[1]}
-				z := complex{xCoord, yCoord}
-				iterations := 0
 
 				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
-					z = z.mul(z).add(c)
+					z = iterate(z)
 				}
 
-				return color(iterations, iterationCap, z, c)
-			}
-		},
-	},
-
-	"burningship": &Fractal{
-		Description:        "Classic burning ship function.",
-		Constants:          0,
-		ColorSchemes:       []string{"simplegrayscale", "wackygrayscale"},
-		DefaultColorScheme: "simplegrayscale",
-		Fn: func(color colorFunc, constants []float64) PointFunc {
-			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
-				z := complex{0, 0}
-				iterations := 0
-
-				for iterations = 0; z.abs() <= 10 && iterations < iterationCap; iterations++ {
-					newReal := (z.real * z.real) - (z.imag * z.imag) + xCoord
-					z.imag = (2 * math.Abs(z.real) * math.Abs(z.imag)) + yCoord
-					z.real = newReal
-				}
-
-				return color(iterations, iterationCap, z, complex{0, 0})
-			}
-		},
-	},
-
-	"collatz": &Fractal{
-		Description:        "The Collatz fractal.\nThe constant value is the absolute value after which the sequence will be assumed to have escaped.",
-		Constants:          0,
-		ColorSchemes:       []string{"simplegrayscale", "wackygrayscale", "wackyrainbow"},
-		DefaultColorScheme: "simplegrayscale",
-		Fn: func(color colorFunc, constants []float64) PointFunc {
-			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
-				z := complex{xCoord, yCoord}
-				iterations := 0
-
-				for iterations = 0; z.abs() < math.MaxFloat64 && iterations < iterationCap; iterations++ {
-					cossq := z.mul(complex{math.Pi / 2, 0}).cos().sq()
-					sinsq := z.mul(complex{math.Pi / 2, 0}).sin().sq()
-					z = cossq.mul(z.mul(complex{0.5, 0})).add(
-						sinsq.mul(z.mul(complex{3.0, 0}).add(complex{1.0, 0})))
-				}
-
-				return color(iterations, iterationCap, z, complex{0, 0})
-			}
-		},
-	},
-
-	"tricorn": &Fractal{
-		Description:        "Classic tricorn function.",
-		Constants:          0,
-		ColorSchemes:       []string{"simplegrayscale", "wackygrayscale", "wackyrainbow", "zgrayscale"},
-		DefaultColorScheme: "simplegrayscale",
-		Fn: func(color colorFunc, constants []float64) PointFunc {
-			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
-				c := complex{xCoord, yCoord}
-				z := complex{0.0, 0.0}
-				iterations := 0
-
-				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
-					z = z.conj()
-					z = z.mul(z).add(c)
-				}
-
-				return color(iterations, iterationCap, z, c)
-			}
-		},
-	},
-
-	"multicorn": &Fractal{
-		Description:        "Classic multicorn function. Constant is the power to which the conjugate of z is raised.",
-		Constants:          1,
-		ColorSchemes:       []string{"simplegrayscale", "wackygrayscale", "wackyrainbow", "zgrayscale"},
-		DefaultColorScheme: "simplegrayscale",
-		Fn: func(color colorFunc, constants []float64) PointFunc {
-			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
-				c := complex{xCoord, yCoord}
-				z := complex{0.0, 0.0}
-				iterations := 0
-
-				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
-					z = z.conj()
-					z = z.pow(constants[0]).add(c)
-				}
-
-				return color(iterations, iterationCap, z, c)
+				return color(
+					iterations,
+					iterationCap,
+					map[string]interface{}{
+						"z":        z,
+						"iterator": iterate,
+					},
+				)
 			}
 		},
 	},
@@ -216,7 +122,7 @@ var Fractals = map[string]*Fractal{
 	"multibrot": &Fractal{
 		Description:        "Classic multibrot function.\nConstant is the power to which z is raised.",
 		Constants:          1,
-		ColorSchemes:       []string{"simplegrayscale", "wackygrayscale", "wackyrainbow", "zgrayscale"},
+		ColorSchemes:       []string{"simplegrayscale", "zgrayscale", "wackyrainbow", "wackygrayscale"},
 		DefaultColorScheme: "simplegrayscale",
 		Fn: func(color colorFunc, constants []float64) PointFunc {
 			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
@@ -224,19 +130,30 @@ var Fractals = map[string]*Fractal{
 				z := complex{0.0, 0.0}
 				iterations := 0
 
-				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
-					z = z.pow(constants[0]).add(c)
+				iterate := func(z complex) complex {
+					return z.pow(constants[0]).add(c)
 				}
 
-				return color(iterations, iterationCap, z, c)
+				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
+					z = iterate(z)
+				}
+
+				return color(
+					iterations,
+					iterationCap,
+					map[string]interface{}{
+						"z": z,
+					},
+				)
 			}
 		},
 	},
 
-	"multijulia": &Fractal{
-		Description:        "Classic multijulia function.\nThe first two constants are the real and imaginary components of C, the third constant is the power to which z is raised.",
-		Constants:          3,
-		ColorSchemes:       []string{"simplegrayscale", "wackygrayscale", "wackyrainbow", "zgrayscale"},
+	// Julia set based fractals
+	"julia": &Fractal{
+		Description:        "Classic Julia function.\nThe two constants are the real and imaginary components of C.",
+		Constants:          2,
+		ColorSchemes:       []string{"simplegrayscale", "zgrayscale", "smoothgrayscale", "smoothcolor", "smoothcolor2", "wackyrainbow", "wackygrayscale"},
 		DefaultColorScheme: "simplegrayscale",
 		Fn: func(color colorFunc, constants []float64) PointFunc {
 			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
@@ -244,11 +161,254 @@ var Fractals = map[string]*Fractal{
 				z := complex{xCoord, yCoord}
 				iterations := 0
 
-				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
-					z = z.pow(constants[2]).add(c)
+				iterate := func(z complex) complex {
+					return z.mul(z).add(c)
 				}
 
-				return color(iterations, iterationCap, z, c)
+				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
+					z = iterate(z)
+				}
+
+				return color(
+					iterations,
+					iterationCap,
+					map[string]interface{}{
+						"z":        z,
+						"iterator": iterate,
+					},
+				)
+			}
+		},
+	},
+
+	"multijulia": &Fractal{
+		Description:        "Classic multijulia function.\nThe first two constants are the real and imaginary components of C, the third constant is the power to which z is raised.",
+		Constants:          3,
+		ColorSchemes:       []string{"simplegrayscale", "zgrayscale", "wackyrainbow", "wackygrayscale"},
+		DefaultColorScheme: "simplegrayscale",
+		Fn: func(color colorFunc, constants []float64) PointFunc {
+			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
+				c := complex{constants[0], constants[1]}
+				z := complex{xCoord, yCoord}
+				iterations := 0
+
+				iterate := func(z complex) complex {
+					return z.pow(constants[2]).add(c)
+				}
+
+				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
+					z = iterate(z)
+				}
+
+				return color(
+					iterations,
+					iterationCap,
+					map[string]interface{}{
+						"z": z,
+					},
+				)
+			}
+		},
+	},
+
+	// Burning ship based fractals
+	"burningship": &Fractal{
+		Description:        "Classic burning ship function.",
+		Constants:          0,
+		ColorSchemes:       []string{"simplegrayscale", "zgrayscale", "smoothgrayscale", "smoothcolor", "smoothcolor2", "wackyrainbow", "wackygrayscale"},
+		DefaultColorScheme: "simplegrayscale",
+		Fn: func(color colorFunc, constants []float64) PointFunc {
+			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
+				z := complex{0, 0}
+				c := complex{xCoord, yCoord}
+				iterations := 0
+
+				iterate := func(z complex) (r complex) {
+					r.real = math.Abs(z.real)
+					r.imag = math.Abs(z.imag)
+					r = r.mul(r).add(c)
+					return r
+				}
+
+				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
+					z = iterate(z)
+				}
+
+				return color(
+					iterations,
+					iterationCap,
+					map[string]interface{}{
+						"z":        z,
+						"iterator": iterate,
+					},
+				)
+			}
+		},
+	},
+
+	"birdofprey": &Fractal{
+		Description:        "Classic burning ship function, with z raised to the power of 3 in lieu of 2.\nProduces a fractal likened to Klingon birds of prey from Star Trek.",
+		Constants:          0,
+		ColorSchemes:       []string{"simplegrayscale", "zgrayscale", "smoothgrayscale", "smoothcolor", "smoothcolor2", "wackyrainbow", "wackygrayscale"},
+		DefaultColorScheme: "simplegrayscale",
+		Fn: func(color colorFunc, constants []float64) PointFunc {
+			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
+				z := complex{0, 0}
+				c := complex{xCoord, yCoord}
+				iterations := 0
+
+				iterate := func(z complex) (r complex) {
+					r.real = math.Abs(z.real)
+					r.imag = math.Abs(z.imag)
+					r = r.mul(r).mul(r).add(c)
+					return r
+				}
+
+				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
+					z = iterate(z)
+				}
+
+				return color(
+					iterations,
+					iterationCap,
+					map[string]interface{}{
+						"z":        z,
+						"iterator": iterate,
+					},
+				)
+			}
+		},
+	},
+
+	"multiburningship": &Fractal{
+		Description:        "Classic burning ship function, with z raised to the power of a constant in lieu of 2.",
+		Constants:          1,
+		ColorSchemes:       []string{"simplegrayscale", "zgrayscale", "wackyrainbow", "wackygrayscale"},
+		DefaultColorScheme: "simplegrayscale",
+		Fn: func(color colorFunc, constants []float64) PointFunc {
+			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
+				z := complex{0, 0}
+				c := complex{xCoord, yCoord}
+				iterations := 0
+
+				iterate := func(z complex) (r complex) {
+					r.real = math.Abs(z.real)
+					r.imag = math.Abs(z.imag)
+					r = r.pow(constants[0]).add(c)
+					return r
+				}
+
+				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
+					z = iterate(z)
+				}
+
+				return color(
+					iterations,
+					iterationCap,
+					map[string]interface{}{
+						"z": z,
+					},
+				)
+			}
+		},
+	},
+
+	// Tricorn based fractals
+	"tricorn": &Fractal{
+		Description:        "Classic tricorn function.",
+		Constants:          0,
+		ColorSchemes:       []string{"simplegrayscale", "zgrayscale", "smoothgrayscale", "smoothcolor", "smoothcolor2", "wackyrainbow", "wackygrayscale"},
+		DefaultColorScheme: "simplegrayscale",
+		Fn: func(color colorFunc, constants []float64) PointFunc {
+			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
+				c := complex{xCoord, yCoord}
+				z := complex{0.0, 0.0}
+				iterations := 0
+
+				iterate := func(z complex) (r complex) {
+					r = z.conj()
+					r = r.mul(r).add(c)
+					return r
+				}
+
+				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
+					z = iterate(z)
+				}
+
+				return color(
+					iterations,
+					iterationCap,
+					map[string]interface{}{
+						"z":        z,
+						"iterator": iterate,
+					},
+				)
+			}
+		},
+	},
+
+	"multicorn": &Fractal{
+		Description:        "Classic multicorn function. Constant is the power to which the conjugate of z is raised.",
+		Constants:          1,
+		ColorSchemes:       []string{"simplegrayscale", "zgrayscale", "wackyrainbow", "wackygrayscale"},
+		DefaultColorScheme: "simplegrayscale",
+		Fn: func(color colorFunc, constants []float64) PointFunc {
+			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
+				c := complex{xCoord, yCoord}
+				z := complex{0.0, 0.0}
+				iterations := 0
+
+				iterate := func(z complex) (r complex) {
+					r = z.conj()
+					r = r.pow(constants[0]).add(c)
+					return r
+				}
+
+				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
+					z = iterate(z)
+				}
+
+				return color(
+					iterations,
+					iterationCap,
+					map[string]interface{}{
+						"z": z,
+					},
+				)
+			}
+		},
+	},
+
+	// Collatz conjecture based fractals
+	"collatz": &Fractal{
+		Description:        "The Collatz fractal.\nThe constant value is the absolute value after which the sequence will be assumed to have escaped.",
+		Constants:          0,
+		ColorSchemes:       []string{"simplegrayscale", "zgrayscale", "wackyrainbow", "wackygrayscale"},
+		DefaultColorScheme: "simplegrayscale",
+		Fn: func(color colorFunc, constants []float64) PointFunc {
+			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
+				z := complex{xCoord, yCoord}
+				iterations := 0
+
+				iterate := func(z complex) (r complex) {
+					cossq := z.mul(complex{math.Pi / 2, 0}).cos().sq()
+					sinsq := z.mul(complex{math.Pi / 2, 0}).sin().sq()
+					r = cossq.mul(z.mul(complex{0.5, 0})).add(
+						sinsq.mul(z.mul(complex{3.0, 0}).add(complex{1.0, 0})))
+					return r
+				}
+
+				for iterations = 0; z.abs() < math.MaxFloat64 && iterations < iterationCap; iterations++ {
+					z = iterate(z)
+				}
+
+				return color(
+					iterations,
+					iterationCap,
+					map[string]interface{}{
+						"z": z,
+					},
+				)
 			}
 		},
 	},
