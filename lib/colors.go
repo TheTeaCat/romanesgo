@@ -5,6 +5,9 @@ import (
 	"math"
 )
 
+/* The relationship between fractals and colorFuncs is many to many, so the use
+   of a map[string]interface{} kwargs here is justifiable.
+*/
 type colorFunc func(iterations, iterationCap int, kwargs map[string]interface{}) (R, G, B, A float64)
 
 var colorSchemes = map[string]colorFunc{
@@ -29,7 +32,6 @@ var colorSchemes = map[string]colorFunc{
 		iterations += 2
 
 		i := float64(iterations)
-
 		if iterations < iterationCap {
 			i = i - (math.Log(math.Log(z.abs())) / math.Log(2))
 		}
@@ -50,7 +52,6 @@ var colorSchemes = map[string]colorFunc{
 		iterations += 2
 
 		i := float64(iterations)
-
 		if iterations < iterationCap {
 			i = i - (math.Log(math.Log(z.abs())) / math.Log(2))
 		}
@@ -75,7 +76,6 @@ var colorSchemes = map[string]colorFunc{
 		iterations += 2
 
 		i := float64(iterations)
-
 		if iterations < iterationCap {
 			i = i - (math.Log(math.Log(z.abs())) / math.Log(2))
 		}

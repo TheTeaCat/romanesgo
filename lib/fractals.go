@@ -33,7 +33,6 @@ func (f Fractal) String() string {
 // GetPointFunc will check for valid fractalname and colorname
 // returns a pointFunc if we're good to go
 func GetPointFunc(fractalName, colorName string, constants []float64) (PointFunc, error) {
-
 	frac, err := GetFractal(fractalName)
 	if err != nil {
 		return nil, err
@@ -88,6 +87,7 @@ func GetFractal(fractalName string) (*Fractal, error) {
 
 // Fractals is a map of the available fractals in this program
 var Fractals = map[string]*Fractal{
+	// Mandelbrot based fractals
 	"mandelbrot": &Fractal{
 		Description:        "Classic mandelbrot function.",
 		Constants:          0,
@@ -119,6 +119,37 @@ var Fractals = map[string]*Fractal{
 		},
 	},
 
+	"multibrot": &Fractal{
+		Description:        "Classic multibrot function.\nConstant is the power to which z is raised.",
+		Constants:          1,
+		ColorSchemes:       []string{"simplegrayscale", "zgrayscale", "wackyrainbow", "wackygrayscale"},
+		DefaultColorScheme: "simplegrayscale",
+		Fn: func(color colorFunc, constants []float64) PointFunc {
+			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
+				c := complex{xCoord, yCoord}
+				z := complex{0.0, 0.0}
+				iterations := 0
+
+				iterate := func(z complex) complex {
+					return z.pow(constants[0]).add(c)
+				}
+
+				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
+					z = iterate(z)
+				}
+
+				return color(
+					iterations,
+					iterationCap,
+					map[string]interface{}{
+						"z": z,
+					},
+				)
+			}
+		},
+	},
+
+	// Julia set based fractals
 	"julia": &Fractal{
 		Description:        "Classic Julia function.\nThe two constants are the real and imaginary components of C.",
 		Constants:          2,
@@ -150,6 +181,37 @@ var Fractals = map[string]*Fractal{
 		},
 	},
 
+	"multijulia": &Fractal{
+		Description:        "Classic multijulia function.\nThe first two constants are the real and imaginary components of C, the third constant is the power to which z is raised.",
+		Constants:          3,
+		ColorSchemes:       []string{"simplegrayscale", "zgrayscale", "wackyrainbow", "wackygrayscale"},
+		DefaultColorScheme: "simplegrayscale",
+		Fn: func(color colorFunc, constants []float64) PointFunc {
+			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
+				c := complex{constants[0], constants[1]}
+				z := complex{xCoord, yCoord}
+				iterations := 0
+
+				iterate := func(z complex) complex {
+					return z.pow(constants[2]).add(c)
+				}
+
+				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
+					z = iterate(z)
+				}
+
+				return color(
+					iterations,
+					iterationCap,
+					map[string]interface{}{
+						"z": z,
+					},
+				)
+			}
+		},
+	},
+
+	// Burning ship based fractals
 	"burningship": &Fractal{
 		Description:        "Classic burning ship function.",
 		Constants:          0,
@@ -251,39 +313,7 @@ var Fractals = map[string]*Fractal{
 		},
 	},
 
-	"collatz": &Fractal{
-		Description:        "The Collatz fractal.\nThe constant value is the absolute value after which the sequence will be assumed to have escaped.",
-		Constants:          0,
-		ColorSchemes:       []string{"simplegrayscale", "zgrayscale", "wackyrainbow", "wackygrayscale"},
-		DefaultColorScheme: "simplegrayscale",
-		Fn: func(color colorFunc, constants []float64) PointFunc {
-			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
-				z := complex{xCoord, yCoord}
-				iterations := 0
-
-				iterate := func(z complex) (r complex) {
-					cossq := z.mul(complex{math.Pi / 2, 0}).cos().sq()
-					sinsq := z.mul(complex{math.Pi / 2, 0}).sin().sq()
-					r = cossq.mul(z.mul(complex{0.5, 0})).add(
-						sinsq.mul(z.mul(complex{3.0, 0}).add(complex{1.0, 0})))
-					return r
-				}
-
-				for iterations = 0; z.abs() < math.MaxFloat64 && iterations < iterationCap; iterations++ {
-					z = iterate(z)
-				}
-
-				return color(
-					iterations,
-					iterationCap,
-					map[string]interface{}{
-						"z": z,
-					},
-				)
-			}
-		},
-	},
-
+	// Tricorn based fractals
 	"tricorn": &Fractal{
 		Description:        "Classic tricorn function.",
 		Constants:          0,
@@ -349,52 +379,26 @@ var Fractals = map[string]*Fractal{
 		},
 	},
 
-	"multibrot": &Fractal{
-		Description:        "Classic multibrot function.\nConstant is the power to which z is raised.",
-		Constants:          1,
+	// Collatz conjecture based fractals
+	"collatz": &Fractal{
+		Description:        "The Collatz fractal.\nThe constant value is the absolute value after which the sequence will be assumed to have escaped.",
+		Constants:          0,
 		ColorSchemes:       []string{"simplegrayscale", "zgrayscale", "wackyrainbow", "wackygrayscale"},
 		DefaultColorScheme: "simplegrayscale",
 		Fn: func(color colorFunc, constants []float64) PointFunc {
 			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
-				c := complex{xCoord, yCoord}
-				z := complex{0.0, 0.0}
-				iterations := 0
-
-				iterate := func(z complex) complex {
-					return z.pow(constants[0]).add(c)
-				}
-
-				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
-					z = iterate(z)
-				}
-
-				return color(
-					iterations,
-					iterationCap,
-					map[string]interface{}{
-						"z": z,
-					},
-				)
-			}
-		},
-	},
-
-	"multijulia": &Fractal{
-		Description:        "Classic multijulia function.\nThe first two constants are the real and imaginary components of C, the third constant is the power to which z is raised.",
-		Constants:          3,
-		ColorSchemes:       []string{"simplegrayscale", "zgrayscale", "wackyrainbow", "wackygrayscale"},
-		DefaultColorScheme: "simplegrayscale",
-		Fn: func(color colorFunc, constants []float64) PointFunc {
-			return func(xCoord, yCoord float64, iterationCap int) (R, G, B, A float64) {
-				c := complex{constants[0], constants[1]}
 				z := complex{xCoord, yCoord}
 				iterations := 0
 
-				iterate := func(z complex) complex {
-					return z.pow(constants[2]).add(c)
+				iterate := func(z complex) (r complex) {
+					cossq := z.mul(complex{math.Pi / 2, 0}).cos().sq()
+					sinsq := z.mul(complex{math.Pi / 2, 0}).sin().sq()
+					r = cossq.mul(z.mul(complex{0.5, 0})).add(
+						sinsq.mul(z.mul(complex{3.0, 0}).add(complex{1.0, 0})))
+					return r
 				}
 
-				for iterations = 0; z.abs() <= 2 && iterations < iterationCap; iterations++ {
+				for iterations = 0; z.abs() < math.MaxFloat64 && iterations < iterationCap; iterations++ {
 					z = iterate(z)
 				}
 
