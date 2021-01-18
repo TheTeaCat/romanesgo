@@ -8,6 +8,7 @@ Supported Fractals:
  - [Julia sets](#a-julia-set)
  - [The Burning Ship fractal](#the-burning-ship-fractal)
  - [The Collatz fractal](#the-collatz-fractal)
+ - The Tricorn set
  - [Multicorn sets](#a-multicorn-animation)
  - [Multibrot sets](#a-multibrot-set)
  - [Multijulia sets](#a-multijulia-set)
