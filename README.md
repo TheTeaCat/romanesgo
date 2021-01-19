@@ -5,13 +5,15 @@ A simple fractal exploration program, named after the "cooler" version of brocco
 Supported Fractals:
 
  - [The Mandelbrot set](#the-mandelbrot-set)
+ - [Multibrot sets](#a-multibrot-set)
  - [Julia sets](#a-julia-set)
+ - [Multijulia sets](#a-multijulia-set)
  - [The Burning Ship fractal](#the-burning-ship-fractal)
+ - The "Bird of prey" fractal (the burning ship fractal raised to the power of 3 in lieu of 2)
+ - Arbitrary power burning ship fractals (multiburningship)
  - [The Collatz fractal](#the-collatz-fractal)
  - The Tricorn set
  - [Multicorn sets](#a-multicorn-animation)
- - [Multibrot sets](#a-multibrot-set)
- - [Multijulia sets](#a-multijulia-set)
 
 ## Contents
 
@@ -22,40 +24,49 @@ Supported Fractals:
 ## Usage
 
 ``` 
-$ ./romanesgo help
-
-Do "romanesco help {Fractal Name}" for further info on a particular fractal function.
+$ git clone git@github.com:TheTeaCat/romanesgo.git
+$ cd romanesgo/
+$ go build
+$ ./romanesgo 
+Do "romanesgo help {Fractal Name}" for further info on a particular fractal function.
 
 Fractals:
-         burningship
-         julia
-         mandelbrot
+	 mandelbrot
+	 julia
+	 multijulia
+	 birdofprey
+	 multiburningship
+	 multicorn
+	 collatz
+	 multibrot
+	 burningship
+	 tricorn
 
 Flags:
   -c value
-        constants
+    	constants
   -cf string
-        coloring function (default "default")
+    	coloring function (default "default")
   -ff string
-        fractal (default "none")
+    	fractal (default "none")
   -fn string
-        filename (default "temp.png")
+    	filename (default "temp.png")
   -h int
-        image height (default 1000)
+    	image height (default 1000)
   -i int
-        maximum iterations (default 128)
+    	maximum iterations (default 128)
   -r int
-        goroutines used (default 8)
+    	goroutines used (default 4)
   -ss int
-        supersampling factor (default 1)
+    	supersampling factor (default 1)
   -w int
-        image width (default 1000)
+    	image width (default 1000)
   -x float
-        central x coord
+    	central x coord
   -y float
-        central y coord
+    	central y coord
   -z float
-        zoom factor (default 1)
+    	zoom factor (default 1)
 ```
 
 
