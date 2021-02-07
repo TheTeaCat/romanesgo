@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2018 Joshua O'Sullivan
+Copyright (c) 2018 Joshua O'Sullivan & Contributors (https://github.com/TheTeaCat/romanesgo/graphs/contributors)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
